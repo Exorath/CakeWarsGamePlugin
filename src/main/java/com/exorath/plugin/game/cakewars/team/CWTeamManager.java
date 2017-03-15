@@ -1,0 +1,66 @@
+package com.exorath.plugin.game.cakewars.team;
+
+import com.exorath.exoteams.TeamAPI;
+import com.exorath.exoteams.player.TeamPlayer;
+import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.basegame.team.TeamManager;
+import com.exorath.plugin.game.cakewars.Main;
+import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+/**
+ * Created by toonsev on 3/15/2017.
+ */
+public class CWTeamManager implements ListeningManager {
+    private TeamAPI teamAPI;
+
+    public CWTeamManager(TeamAPI teamAPI, FileConfiguration mapConfig) {
+        this.teamAPI = teamAPI;
+        loadTeams(mapConfig);
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event){
+        teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
+    }
+
+    @EventHandler
+    public void onLeave(PlayerQuitEvent event){
+        teamAPI.onPlayerLeave(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
+    }
+    private void loadTeams(FileConfiguration mapConfig) {
+        ConfigurationSection teamsSection = mapConfig.getConfigurationSection("teams");
+        if (teamsSection == null) {
+            System.out.println("No teams configuration");
+            Main.terminate();
+        }
+        for (String key : teamsSection.getKeys(false)) {
+            loadTeam(teamsSection.getConfigurationSection(key));
+        }
+    }
+
+    private void loadTeam(ConfigurationSection teamConfig) {
+        if (!teamConfig.contains("spawnLocation")) {
+            System.out.println("No spawnLocation in team map section");
+            Main.terminate();
+        }
+        if (!teamConfig.contains("cakeLocation")) {
+            System.out.println("No cakeLocation in team map section");
+            Main.terminate();
+        }
+        if (!teamConfig.contains("primaryShopLocation")) {
+            System.out.println("No primaryShopLocation in team map section");
+            Main.terminate();
+        }
+        int maxPlayers = teamConfig.contains("maxPlayers") ? teamConfig.getInt("maxPlayers") : 0;
+        teamAPI.addTeam(new CWTeam(
+                Location.deserialize(teamConfig.getConfigurationSection("cakeLocation").getValues(true)),
+                Location.deserialize(teamConfig.getConfigurationSection("spawnLocation").getValues(true)),
+                Location.deserialize(teamConfig.getConfigurationSection("primaryShopLocation").getValues(true)),
+                maxPlayers));
+    }
+}
