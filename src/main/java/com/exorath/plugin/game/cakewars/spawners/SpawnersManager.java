@@ -21,6 +21,10 @@ public class SpawnersManager implements Manager {
     private Set<Spawner> spawners = new HashSet<>();
 
     public SpawnersManager(ConfigurationSection spawnersSection) {
+        if(spawnersSection == null){
+            System.out.println("No spawnerssection found in map config.");
+            Main.terminate();
+        }
         this.spawnersSection = spawnersSection;
         loadSpawnerTypes(spawnersSection.getConfigurationSection("spawnerTypes"));
         loadSpawners(spawnersSection.getConfigurationSection("spawners"));
