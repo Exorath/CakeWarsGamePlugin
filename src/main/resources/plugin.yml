@@ -1,5 +1,5 @@
 name: CakeWarsGame
-main: com.exorath.plugin.game.cakewars
+main: com.exorath.plugin.game.cakewars.Main
 version: 0.0.1
 author: Toon Sevrin
 depend: [BaseGame]
