@@ -20,11 +20,11 @@ public class Main extends JavaPlugin{
     @Override
     public void onEnable() {
         Main.instance = this;
+        this.baseGameAPI = BaseGameAPI.getInstance();
         System.out.println("config: ");
         for(String key : baseGameAPI.getMapsManager().getGameMap().getConfiguration().getKeys(true))
             System.out.println(key);
         System.out.println("--------");
-        this.baseGameAPI = BaseGameAPI.getInstance();
         ConfigurationSection teamsSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("teams");
         baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), teamsSection));
         ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
