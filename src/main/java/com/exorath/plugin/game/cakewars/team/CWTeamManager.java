@@ -18,9 +18,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class CWTeamManager implements ListeningManager {
     private TeamAPI teamAPI;
 
-    public CWTeamManager(TeamAPI teamAPI, FileConfiguration mapConfig) {
+    public CWTeamManager(TeamAPI teamAPI, ConfigurationSection teamsSection) {
         this.teamAPI = teamAPI;
-        loadTeams(mapConfig);
+        loadTeams(teamsSection);
     }
 
     @EventHandler
@@ -32,35 +32,33 @@ public class CWTeamManager implements ListeningManager {
     public void onLeave(PlayerQuitEvent event){
         teamAPI.onPlayerLeave(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
     }
-    private void loadTeams(FileConfiguration mapConfig) {
-        ConfigurationSection teamsSection = mapConfig.getConfigurationSection("teams");
+    private void loadTeams(ConfigurationSection teamsSection) {
         if (teamsSection == null) {
             System.out.println("No teams configuration");
             Main.terminate();
         }
-        for (String key : teamsSection.getKeys(false)) {
+        for (String key : teamsSection.getKeys(false))
             loadTeam(teamsSection.getConfigurationSection(key));
-        }
     }
 
-    private void loadTeam(ConfigurationSection teamConfig) {
-        if (!teamConfig.contains("spawnLocation")) {
+    private void loadTeam(ConfigurationSection teamSection) {
+        if (!teamSection.contains("spawnLocation")) {
             System.out.println("No spawnLocation in team map section");
             Main.terminate();
         }
-        if (!teamConfig.contains("cakeLocation")) {
+        if (!teamSection.contains("cakeLocation")) {
             System.out.println("No cakeLocation in team map section");
             Main.terminate();
         }
-        if (!teamConfig.contains("primaryShopLocation")) {
+        if (!teamSection.contains("primaryShopLocation")) {
             System.out.println("No primaryShopLocation in team map section");
             Main.terminate();
         }
-        int maxPlayers = teamConfig.contains("maxPlayers") ? teamConfig.getInt("maxPlayers") : 0;
+        int maxPlayers = teamSection.contains("maxPlayers") ? teamSection.getInt("maxPlayers") : 0;
         teamAPI.addTeam(new CWTeam(
-                Location.deserialize(teamConfig.getConfigurationSection("cakeLocation").getValues(true)),
-                Location.deserialize(teamConfig.getConfigurationSection("spawnLocation").getValues(true)),
-                Location.deserialize(teamConfig.getConfigurationSection("primaryShopLocation").getValues(true)),
+                Location.deserialize(teamSection.getConfigurationSection("cakeLocation").getValues(true)),
+                Location.deserialize(teamSection.getConfigurationSection("spawnLocation").getValues(true)),
+                Location.deserialize(teamSection.getConfigurationSection("primaryShopLocation").getValues(true)),
                 maxPlayers));
     }
 }

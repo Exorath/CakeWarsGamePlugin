@@ -1,8 +1,10 @@
 package com.exorath.plugin.game.cakewars;
 
 import com.exorath.plugin.basegame.BaseGameAPI;
+import com.exorath.plugin.game.cakewars.spawners.SpawnersManager;
 import com.exorath.plugin.game.cakewars.team.CWTeamManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -15,7 +17,10 @@ public class Main extends JavaPlugin{
     public void onEnable() {
         Main.instance = this;
         this.baseGameAPI = BaseGameAPI.getInstance();
-        baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), baseGameAPI.getMapsManager().getGameMap().getConfiguration()));
+        ConfigurationSection teamsSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("teams");
+        baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), teamsSection));
+        ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
+        baseGameAPI.addManager(new SpawnersManager(spawnersSection));
     }
 
     public static Main getInstance(){
