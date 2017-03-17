@@ -26,6 +26,8 @@ public class SpawnersManager implements Manager {
             Main.terminate();
         }
         this.spawnersSection = spawnersSection;
+        for(String key : spawnersSection.getKeys(true))
+            System.out.println(key);
         loadSpawnerTypes(spawnersSection.getConfigurationSection("spawnerTypes"));
         loadSpawners(spawnersSection.getConfigurationSection("spawners"));
     }
