@@ -6,6 +6,7 @@ import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -54,11 +55,12 @@ public class CWTeamManager implements ListeningManager {
             System.out.println("No primaryShopLocation in team map section");
             Main.terminate();
         }
+        World world = Main.getInstance().getMapsManager().getGameMap().getWorld();
         int maxPlayers = teamSection.contains("maxPlayers") ? teamSection.getInt("maxPlayers") : 0;
         teamAPI.addTeam(new CWTeam(
-                Location.deserialize(teamSection.getConfigurationSection("cakeLocation").getValues(true)),
-                Location.deserialize(teamSection.getConfigurationSection("spawnLocation").getValues(true)),
-                Location.deserialize(teamSection.getConfigurationSection("primaryShopLocation").getValues(true)),
+                Main.getLocation(world, teamSection.getConfigurationSection("cakeLocation")),
+                Main.getLocation(world, teamSection.getConfigurationSection("spawnLocation")),
+                Main.getLocation(world, teamSection.getConfigurationSection("primaryShopLocation")),
                 maxPlayers));
     }
 }

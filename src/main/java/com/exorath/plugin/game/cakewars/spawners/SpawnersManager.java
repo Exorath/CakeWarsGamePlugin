@@ -4,6 +4,7 @@ import com.exorath.plugin.basegame.manager.Manager;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -50,6 +51,8 @@ public class SpawnersManager implements Manager {
             System.out.println("No spawners section found");
             Main.terminate();
         }
+
+        World world = Main.getInstance().getMapsManager().getGameMap().getWorld();
         for (String key : spawnersSection.getKeys(false)) {
             ConfigurationSection spawnerSection = spawnersSection.getConfigurationSection(key);
             if (!spawnerSection.contains("type")) {
@@ -65,7 +68,7 @@ public class SpawnersManager implements Manager {
                 System.out.println("a spawner type was not found in spawner config");
                 Main.terminate();
             }
-            Spawner spawner = new Spawner(Location.deserialize(spawnerSection.getConfigurationSection("location").getValues(true)), spawnerType);
+            Spawner spawner = new Spawner(Main.getLocation(world, spawnerSection.getConfigurationSection("location")), spawnerType);
             spawners.add(spawner);
         }
     }
