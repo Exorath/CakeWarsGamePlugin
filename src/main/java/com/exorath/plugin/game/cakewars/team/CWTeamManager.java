@@ -1,15 +1,12 @@
 package com.exorath.plugin.game.cakewars.team;
 
 import com.exorath.exoteams.TeamAPI;
-import com.exorath.exoteams.player.TeamPlayer;
 import com.exorath.plugin.basegame.lib.LocationSerialization;
 import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
