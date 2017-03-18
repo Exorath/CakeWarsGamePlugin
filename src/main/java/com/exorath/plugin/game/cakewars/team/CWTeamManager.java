@@ -32,27 +32,19 @@ public class CWTeamManager implements ListeningManager {
         teamAPI.onPlayerLeave(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
     }
     private void loadTeams(ConfigurationSection teamsSection) {
-        if (teamsSection == null) {
-            System.out.println("No teams configuration");
-            Main.terminate();
-        }
+        if (teamsSection == null)
+            Main.terminate("No teams configuration");
         for (String key : teamsSection.getKeys(false))
             loadTeam(teamsSection.getConfigurationSection(key));
     }
 
     private void loadTeam(ConfigurationSection teamSection) {
-        if (!teamSection.contains("spawnLocation")) {
-            System.out.println("No spawnLocation in team map section");
-            Main.terminate();
-        }
-        if (!teamSection.contains("cakeLocation")) {
-            System.out.println("No cakeLocation in team map section");
-            Main.terminate();
-        }
-        if (!teamSection.contains("primaryShopLocation")) {
-            System.out.println("No primaryShopLocation in team map section");
-            Main.terminate();
-        }
+        if (!teamSection.contains("spawnLocation"))
+            Main.terminate("No spawnLocation in team map section");
+        if (!teamSection.contains("cakeLocation"))
+            Main.terminate("No cakeLocation in team map section");
+        if (!teamSection.contains("primaryShopLocation"))
+            Main.terminate("No primaryShopLocation in team map section");
         World world = Main.getInstance().getMapsManager().getGameMap().getWorld();
         int maxPlayers = teamSection.contains("maxPlayers") ? teamSection.getInt("maxPlayers") : 0;
         teamAPI.addTeam(new CWTeam(

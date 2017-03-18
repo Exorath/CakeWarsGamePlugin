@@ -40,7 +40,13 @@ public class Main extends JavaPlugin{
         System.out.println("Termination failed, force exiting system...");
         System.exit(1);
     }
-
+    public static void terminate(String message) {
+        System.out.println(message);
+        System.out.println("1v1Plugin is terminating...");
+        Bukkit.shutdown();
+        System.out.println("Termination failed, force exiting system...");
+        System.exit(1);
+    }
     public MapsManager getMapsManager(){
         return baseGameAPI.getMapsManager();
     }

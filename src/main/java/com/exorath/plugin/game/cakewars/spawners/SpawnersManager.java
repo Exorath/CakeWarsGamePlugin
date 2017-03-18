@@ -21,10 +21,8 @@ public class SpawnersManager implements Manager {
     private Set<Spawner> spawners = new HashSet<>();
 
     public SpawnersManager(ConfigurationSection spawnersSection) {
-        if(spawnersSection == null){
-            System.out.println("No spawnerssection found in map config.");
-            Main.terminate();
-        }
+        if(spawnersSection == null)
+            Main.terminate("No spawnerssection found in map config.");
         this.spawnersSection = spawnersSection;
         for(String key : spawnersSection.getKeys(true))
             System.out.println(key);
@@ -33,20 +31,14 @@ public class SpawnersManager implements Manager {
     }
 
     private void loadSpawnerTypes(ConfigurationSection spawnerTypesSection) {
-        if(spawnerTypesSection == null){
-            System.out.println("No spawnerTypes section found");
-            Main.terminate();
-        }
+        if(spawnerTypesSection == null)
+            Main.terminate("No spawnerTypes section found");
         for (String key : spawnerTypesSection.getKeys(false)) {
             ConfigurationSection typeSection = spawnerTypesSection.getConfigurationSection(key);
-            if (!typeSection.contains("material")) {
-                System.out.println("No type material in a spawnerType config");
-                Main.terminate();
-            }
-            if (!typeSection.contains("interval")) {
-                System.out.println("No interval field in a spawnerType config");
-                Main.terminate();
-            }
+            if (!typeSection.contains("material"))
+                Main.terminate("No type material in a spawnerType config");
+            if (!typeSection.contains("interval"))
+                Main.terminate("No interval field in a spawnerType config");
             SpawnerType type = new SpawnerType(Material.valueOf(typeSection.getString("material")), typeSection.getLong("interval"));
             spawnerTypes.put(key, type);
         }
@@ -61,19 +53,14 @@ public class SpawnersManager implements Manager {
         World world = Main.getInstance().getMapsManager().getGameMap().getWorld();
         for (String key : spawnersSection.getKeys(false)) {
             ConfigurationSection spawnerSection = spawnersSection.getConfigurationSection(key);
-            if (!spawnerSection.contains("type")) {
-                System.out.println("No type field in a spawner config");
-                Main.terminate();
-            }
-            if (!spawnerSection.contains("location")) {
-                System.out.println("No location field in a spawner config");
-                Main.terminate();
-            }
+            if (!spawnerSection.contains("type"))
+                Main.terminate("No type field in a spawner config");
+            if (!spawnerSection.contains("location"))
+                Main.terminate("No location field in a spawner config");
+
             SpawnerType spawnerType = spawnerTypes.get(spawnerSection.getString("type"));
-            if (spawnerType == null) {
-                System.out.println("a spawner type was not found in spawner config");
-                Main.terminate();
-            }
+            if (spawnerType == null)
+                Main.terminate("a spawner type was not found in spawner config");
             Spawner spawner = new Spawner(LocationSerialization.getLocation(world, spawnerSection.getConfigurationSection("location")), spawnerType);
             spawner.start();
             spawners.add(spawner);
