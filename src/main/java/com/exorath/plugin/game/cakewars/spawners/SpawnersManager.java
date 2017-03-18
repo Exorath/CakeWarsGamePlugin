@@ -1,5 +1,6 @@
 package com.exorath.plugin.game.cakewars.spawners;
 
+import com.exorath.plugin.basegame.lib.LocationSerialization;
 import com.exorath.plugin.basegame.manager.Manager;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Location;
@@ -74,7 +75,7 @@ public class SpawnersManager implements Manager {
                 System.out.println("a spawner type was not found in spawner config");
                 Main.terminate();
             }
-            Spawner spawner = new Spawner(Main.getLocation(world, spawnerSection.getConfigurationSection("location")), spawnerType);
+            Spawner spawner = new Spawner(LocationSerialization.getLocation(world, spawnerSection.getConfigurationSection("location")), spawnerType);
             spawners.add(spawner);
         }
     }

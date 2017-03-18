@@ -2,6 +2,7 @@ package com.exorath.plugin.game.cakewars.team;
 
 import com.exorath.exoteams.TeamAPI;
 import com.exorath.exoteams.player.TeamPlayer;
+import com.exorath.plugin.basegame.lib.LocationSerialization;
 import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
@@ -58,9 +59,9 @@ public class CWTeamManager implements ListeningManager {
         World world = Main.getInstance().getMapsManager().getGameMap().getWorld();
         int maxPlayers = teamSection.contains("maxPlayers") ? teamSection.getInt("maxPlayers") : 0;
         teamAPI.addTeam(new CWTeam(
-                Main.getLocation(world, teamSection.getConfigurationSection("cakeLocation")),
-                Main.getLocation(world, teamSection.getConfigurationSection("spawnLocation")),
-                Main.getLocation(world, teamSection.getConfigurationSection("primaryShopLocation")),
+                LocationSerialization.getLocation(world, teamSection.getConfigurationSection("cakeLocation")),
+                LocationSerialization.getLocation(world, teamSection.getConfigurationSection("spawnLocation")),
+                LocationSerialization.getLocation(world, teamSection.getConfigurationSection("primaryShopLocation")),
                 maxPlayers));
     }
 }
