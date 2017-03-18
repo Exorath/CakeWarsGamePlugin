@@ -1,8 +1,10 @@
 package com.exorath.plugin.game.cakewars;
 
 import com.exorath.plugin.basegame.BaseGameAPI;
+import com.exorath.plugin.basegame.clickableEntities.ClickableEntitiesManager;
 import com.exorath.plugin.basegame.maps.MapsManager;
 import com.exorath.plugin.basegame.state.State;
+import com.exorath.plugin.game.cakewars.shop.ShopManager;
 import com.exorath.plugin.game.cakewars.spawners.SpawnersManager;
 import com.exorath.plugin.game.cakewars.startTeleport.StartTeleportManager;
 import com.exorath.plugin.game.cakewars.team.CWTeamManager;
@@ -25,6 +27,7 @@ public class Main extends JavaPlugin{
         ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
         baseGameAPI.addManager(new SpawnersManager(spawnersSection));
         baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
+        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams()));
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 
