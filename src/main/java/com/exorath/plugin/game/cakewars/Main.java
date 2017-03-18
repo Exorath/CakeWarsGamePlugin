@@ -2,7 +2,9 @@ package com.exorath.plugin.game.cakewars;
 
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.maps.MapsManager;
+import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.game.cakewars.spawners.SpawnersManager;
+import com.exorath.plugin.game.cakewars.startTeleport.StartTeleportManager;
 import com.exorath.plugin.game.cakewars.team.CWTeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,16 +20,12 @@ public class Main extends JavaPlugin{
     public void onEnable() {
         Main.instance = this;
         this.baseGameAPI = BaseGameAPI.getInstance();
-        System.out.println("config: ");
-        for(String key : baseGameAPI.getMapsManager().getGameMap().getConfiguration().getKeys(true))
-            System.out.println(key);
-        System.out.println("--------");
         ConfigurationSection teamsSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("teams");
         baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), teamsSection));
         ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
         baseGameAPI.addManager(new SpawnersManager(spawnersSection));
-
-
+        baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
+        baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 
     public static Main getInstance(){
