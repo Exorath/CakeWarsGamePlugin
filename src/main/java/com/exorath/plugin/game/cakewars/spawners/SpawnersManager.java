@@ -76,6 +76,7 @@ public class SpawnersManager implements Manager {
                 Main.terminate();
             }
             Spawner spawner = new Spawner(LocationSerialization.getLocation(world, spawnerSection.getConfigurationSection("location")), spawnerType);
+            spawner.start();
             spawners.add(spawner);
         }
     }
