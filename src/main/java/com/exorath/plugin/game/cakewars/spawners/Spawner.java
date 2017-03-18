@@ -1,5 +1,7 @@
 package com.exorath.plugin.game.cakewars.spawners;
 
+import com.exorath.plugin.basegame.BaseGameAPI;
+import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,6 +24,8 @@ public class Spawner {
         if (started)
             return false;
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), () -> {
+            if(BaseGameAPI.getInstance().getStateManager().getState() != State.STARTED)
+                return;
             if (location.getWorld() != null) {
                 location.getWorld().dropItem(location, new ItemStack(type.getMaterial()));
             } else
