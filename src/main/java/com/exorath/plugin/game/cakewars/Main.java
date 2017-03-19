@@ -10,6 +10,7 @@ import com.exorath.plugin.game.cakewars.startTeleport.StartTeleportManager;
 import com.exorath.plugin.game.cakewars.team.CWTeamManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -27,7 +28,7 @@ public class Main extends JavaPlugin{
         ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
         baseGameAPI.addManager(new SpawnersManager(spawnersSection));
         baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
-        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams()));
+        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), getConfig().getConfigurationSection("shop")));
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 
