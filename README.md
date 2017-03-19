@@ -2,7 +2,7 @@
 The main plugin for the CakeWarsGame. CakeWars is our Proof of Concept gamemode.
 
 
-##config.yml
+## config.yml
 
 ```yaml
 shop:
@@ -19,7 +19,7 @@ shop:
     - Buy weapons here
 ```
 
-##exomap.yml
+## exomap.yml
 
 ```yaml
 teams:
