@@ -6,6 +6,7 @@ import com.exorath.exomenus.Size;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -35,27 +36,30 @@ public class ShopDirectory extends MenuItem {
         return menu;
     }
 
-    public static ShopDirectory load(ShopMenu menu, ConfigurationSection directorySection){
-        if(!directorySection.contains("slot"))
+    public static ShopDirectory load(ShopMenu menu, ConfigurationSection directorySection) {
+        if (!directorySection.contains("slot"))
             Main.terminate("Shop directory does not contain 'slot' field");
-        if(!directorySection.contains("name"))
+        if (!directorySection.contains("name"))
             Main.terminate("Shop directory does not contain 'name' field");
-        if(!directorySection.contains("material"))
+        if (!directorySection.contains("material"))
             Main.terminate("Shop directory does not contain 'material' field");
-        if(!directorySection.contains("items"))
+        if (!directorySection.contains("items"))
             Main.terminate("Shop directory does not contain 'items' field");
-        if(!directorySection.contains("lore"))
+        if (!directorySection.contains("lore"))
             Main.terminate("Shop directory does not contain 'lore' field");
-        List<String>  lore = directorySection.getStringList("lore");
+        List<String> lore = directorySection.getStringList("lore");
         List<BuyableItem> items = ((List<ConfigurationSection>) directorySection.getList("items", new ArrayList<>()))
                 .stream().map(itemSection -> BuyableItem.getItem(itemSection))
                 .collect(Collectors.toList());
-        return new ShopDirectory(menu,
+
+        ShopDirectory directory = new ShopDirectory(menu,
                 directorySection.getString("name"),
                 Material.valueOf(directorySection.getString("material")),
                 directorySection.getInt("slot"),
                 items,
                 lore.toArray(new String[lore.size()]));
+        directory.getClickObservable().subscribe(event -> directory.getMenu().open((Player) event.getWhoClicked()));
+        return directory;
 
     }
 }
