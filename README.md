@@ -3,6 +3,7 @@ The main plugin for the CakeWarsGame. CakeWars is our Proof of Concept gamemode.
 
 
 ##config.yml
+```yaml
 shop:
   directory1:
     name: Weapons
@@ -15,8 +16,10 @@ shop:
       slot: 0
     lore:
     - Buy weapons here
+```
 
 ##exomap.yml
+```yaml
 teams:
   team1:
     spawnLocation:
@@ -52,3 +55,4 @@ spawners:
 flavorIds:
 - default
 - fast
+```
