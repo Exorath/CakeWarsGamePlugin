@@ -3,6 +3,7 @@ The main plugin for the CakeWarsGame. CakeWars is our Proof of Concept gamemode.
 
 
 ##config.yml
+
 ```yaml
 shop:
   directory1:
@@ -19,6 +20,7 @@ shop:
 ```
 
 ##exomap.yml
+
 ```yaml
 teams:
   team1:
