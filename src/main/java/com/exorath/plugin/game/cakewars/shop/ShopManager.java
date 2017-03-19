@@ -9,6 +9,7 @@ import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.game.cakewars.team.CWTeam;
 import io.reactivex.Observable;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -23,14 +24,24 @@ import java.util.Collection;
 public class ShopManager implements ListeningManager {
     private Collection<Team> teams;
     private ClickableEntitiesManager clickableEntitiesManager;
+    private ConfigurationSection shopSection;
+    private ShopMenu shopMenu;
     private boolean started = false;
 
-    public ShopManager(ClickableEntitiesManager clickableEntitiesManager, Collection<Team> teams) {
+    public ShopManager(ClickableEntitiesManager clickableEntitiesManager, Collection<Team> teams, ConfigurationSection shopSection) {
         this.clickableEntitiesManager = clickableEntitiesManager;
         this.teams = teams;
+        this.shopSection = shopSection;
+        this.shopMenu = loadMenu(shopSection);
 
     }
 
+    private static ShopMenu loadMenu(ConfigurationSection section){
+        ShopMenu menu = new ShopMenu();
+        for(String key : section.getKeys(false))
+            menu.addShopDirectory(ShopDirectory.load(menu, section.getConfigurationSection(key)));
+        return menu;
+    }
     @EventHandler(priority = EventPriority.MONITOR)
     public void onStateChange(StateChangeEvent event) {
         if (started)
@@ -47,6 +58,6 @@ public class ShopManager implements ListeningManager {
         Entity entity = primaryShopLocation.getWorld().spawnEntity(primaryShopLocation, EntityType.VILLAGER);
         ClickableEntity clickableEntity = clickableEntitiesManager.getClickEntAPI().makeClickable(entity);
         Observable<PlayerInteractAtEntityEvent> obs = clickableEntity.getInteractObservable();
-        obs.subscribe(event -> event.getPlayer().sendMessage("clicked"));
+        obs.subscribe(event -> this.shopMenu.getMenu().open(event.getPlayer()));
     }
 }
