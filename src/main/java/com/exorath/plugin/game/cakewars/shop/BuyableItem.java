@@ -3,7 +3,6 @@ package com.exorath.plugin.game.cakewars.shop;
 import com.exorath.exomenus.MenuItem;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,8 +39,8 @@ public class BuyableItem extends MenuItem {
             Main.terminate("BuyableItem section does not contain 'slot' field");
         BuyableItem item = new BuyableItem((String) section.get("name"),
                 Material.valueOf((String) section.get("material")),
-                Integer.valueOf((String) section.get("amount")),
-                Integer.valueOf((String) section.get("slot")));
+                (Integer) section.get("amount"),
+                (Integer) section.get("slot"));
         item.getClickObservable().subscribe(event -> buy((Player) event.getWhoClicked(), item));
         return item;
     }

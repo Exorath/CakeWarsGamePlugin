@@ -5,7 +5,6 @@ import com.exorath.exomenus.MenuItem;
 import com.exorath.exomenus.Size;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -58,7 +57,7 @@ public class ShopDirectory extends MenuItem {
         ShopDirectory directory = new ShopDirectory(menu,
                 (String) directorySection.get("name"),
                 Material.valueOf((String) directorySection.get("material")),
-                Integer.valueOf((String)directorySection.get("slot")),
+                (Integer) directorySection.get("slot"),
                 items,
                 lore.toArray(new String[lore.size()]));
         directory.getClickObservable().subscribe(event -> directory.getMenu().open((Player) event.getWhoClicked()));
