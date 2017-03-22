@@ -76,7 +76,7 @@
         <dependency>
             <groupId>com.github.Exorath</groupId>
             <artifactId>BaseGamePlugin</artifactId>
-            <version>0.0.18</version>
+            <version>0.0.19</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
