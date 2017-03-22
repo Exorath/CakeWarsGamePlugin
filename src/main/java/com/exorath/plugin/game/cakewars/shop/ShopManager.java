@@ -37,6 +37,8 @@ public class ShopManager implements ListeningManager {
     }
 
     private static ShopMenu loadMenu(ConfigurationSection section){
+        if(section == null)
+            return new ShopMenu();
         ShopMenu menu = new ShopMenu();
         for(String key : section.getKeys(false))
             menu.addShopDirectory(ShopDirectory.load(menu, section.getConfigurationSection(key)));
