@@ -20,7 +20,7 @@ public class BuyableItem extends MenuItem {
     }
 
     public BuyableItem(String name, Material material, int amount, int slot, String... lore) {
-        super(name, new ItemStack(material, amount), lore);
+        super(name, new ItemStack(material, amount), lore == null ? new String[0] : lore);
         this.slot = slot;
     }
 
