@@ -7,6 +7,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Map;
+
 
 /**
  * Created by toonsev on 3/18/2017.
@@ -27,19 +29,19 @@ public class BuyableItem extends MenuItem {
         return slot;
     }
 
-    public static BuyableItem getItem(ConfigurationSection section) {
-        if (!section.contains("name"))
+    public static BuyableItem getItem(Map<String, Object> section) {
+        if (!section.containsKey("name"))
             Main.terminate("BuyableItem section does not contain 'name' field");
-        if (!section.contains("material"))
+        if (!section.containsKey("material"))
             Main.terminate("BuyableItem section does not contain 'material' field");
-        if (!section.contains("amount"))
+        if (!section.containsKey("amount"))
             Main.terminate("BuyableItem section does not contain 'amount' field");
-        if (!section.contains("slot"))
+        if (!section.containsKey("slot"))
             Main.terminate("BuyableItem section does not contain 'slot' field");
-        BuyableItem item = new BuyableItem(section.getString("name"),
-                Material.valueOf(section.getString("material")),
-                section.getInt("amount"),
-                section.getInt("slot"));
+        BuyableItem item = new BuyableItem((String) section.get("name"),
+                Material.valueOf((String) section.get("material")),
+                Integer.valueOf((String) section.get("amount")),
+                Integer.valueOf((String) section.get("slot")));
         item.getClickObservable().subscribe(event -> buy((Player) event.getWhoClicked(), item));
         return item;
     }

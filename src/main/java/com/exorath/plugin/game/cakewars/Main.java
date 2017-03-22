@@ -25,12 +25,13 @@ public class Main extends JavaPlugin{
         Main.instance = this;
         this.baseGameAPI = BaseGameAPI.getInstance();
         String flavor = baseGameAPI.getManager(FlavorManager.class).getFlavor();
+        ConfigurationSection flavorSection = getConfig().getConfigurationSection("flavors." + flavor);
         ConfigurationSection teamsSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("teams");
         baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), teamsSection));
         ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
         baseGameAPI.addManager(new SpawnersManager(spawnersSection));
         baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
-        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), getConfig().getConfigurationSection("flavors." + flavor + ".shop")));
+        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 

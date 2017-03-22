@@ -16,7 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Created by toonsev on 3/18/2017.
@@ -40,8 +40,11 @@ public class ShopManager implements ListeningManager {
         if(section == null)
             return new ShopMenu();
         ShopMenu menu = new ShopMenu();
-        for(String key : section.getKeys(false))
-            menu.addShopDirectory(ShopDirectory.load(menu, section.getConfigurationSection(key)));
+        List<HashMap<String, Object>> directoryMaps = (List<HashMap<String, Object>>) section.getList("directories", new ArrayList<HashMap>());
+        for(Map<String, Object> directoryMap : directoryMaps){
+            menu.addShopDirectory(ShopDirectory.load(menu, directoryMap));
+
+        }
         return menu;
     }
     @EventHandler(priority = EventPriority.MONITOR)

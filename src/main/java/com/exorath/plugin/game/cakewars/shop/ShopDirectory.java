@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,26 +37,28 @@ public class ShopDirectory extends MenuItem {
         return menu;
     }
 
-    public static ShopDirectory load(ShopMenu menu, ConfigurationSection directorySection) {
-        if (!directorySection.contains("slot"))
+    public static ShopDirectory load(ShopMenu menu, Map<String, Object> directorySection) {
+        if (!directorySection.containsKey("slot"))
             Main.terminate("Shop directory does not contain 'slot' field");
-        if (!directorySection.contains("name"))
+        if (!directorySection.containsKey("name"))
             Main.terminate("Shop directory does not contain 'name' field");
-        if (!directorySection.contains("material"))
+        if (!directorySection.containsKey("material"))
             Main.terminate("Shop directory does not contain 'material' field");
-        if (!directorySection.contains("items"))
+        if (!directorySection.containsKey("items"))
             Main.terminate("Shop directory does not contain 'items' field");
-        if (!directorySection.contains("lore"))
+        if (!directorySection.containsKey("lore"))
             Main.terminate("Shop directory does not contain 'lore' field");
-        List<String> lore = directorySection.getStringList("lore");
-        List<BuyableItem> items = ((List<ConfigurationSection>) directorySection.getList("items", new ArrayList<>()))
-                .stream().map(itemSection -> BuyableItem.getItem(itemSection))
+        List<String> lore = (ArrayList<String>) directorySection.getOrDefault("lore", new ArrayList<>());
+
+        List<BuyableItem> items =  ((ArrayList<Map<String, Object>>) directorySection.getOrDefault("items", new ArrayList<>()))
+                .stream().map(itemMap -> BuyableItem.getItem(itemMap))
                 .collect(Collectors.toList());
 
+
         ShopDirectory directory = new ShopDirectory(menu,
-                directorySection.getString("name"),
-                Material.valueOf(directorySection.getString("material")),
-                directorySection.getInt("slot"),
+                (String) directorySection.get("name"),
+                Material.valueOf((String) directorySection.get("material")),
+                Integer.valueOf((String)directorySection.get("slot")),
                 items,
                 lore.toArray(new String[lore.size()]));
         directory.getClickObservable().subscribe(event -> directory.getMenu().open((Player) event.getWhoClicked()));
