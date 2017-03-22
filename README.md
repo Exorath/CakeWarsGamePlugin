@@ -5,18 +5,20 @@ The main plugin for the CakeWarsGame. CakeWars is our Proof of Concept gamemode.
 ## config.yml
 
 ```yaml
-shop:
-  directory1:
-    name: Weapons
-    material: IRON_SWORD
-    slot: 0
-    items:
-    - name: Wooden Sword
-      material: WOODEN_SWORD
-      amount: 1
-      slot: 0
-    lore:
-    - Buy weapons here
+flavors:
+  default:
+    shop:
+      directory1:
+        name: Weapons
+        material: IRON_SWORD
+        slot: 0
+        items:
+        - name: Wooden Sword
+          material: WOODEN_SWORD
+          amount: 1
+          slot: 0
+        lore:
+        - Buy weapons here
 ```
 
 ## exomap.yml
