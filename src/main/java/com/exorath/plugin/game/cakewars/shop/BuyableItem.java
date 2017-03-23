@@ -5,13 +5,16 @@ import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.spawners.SpawnerType;
 import com.exorath.plugin.game.cakewars.spawners.SpawnersManager;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -19,15 +22,24 @@ import java.util.Map;
  */
 public class BuyableItem extends MenuItem {
     private int slot;
-    private Map<SpawnerType, Integer> costsPerSpawnerType = new HashMap<>();
+    private Map<SpawnerType, Integer> costsPerSpawnerType;
 
-    public BuyableItem(String name, Material material, int amount, int slot) {
-        this(name, material, amount, slot, null);
+    public BuyableItem(String name, Material material, int amount, Map<SpawnerType, Integer> costsPerSpawnerType, int slot) {
+        this(name, material, amount, slot, costsPerSpawnerType, null);
     }
 
-    public BuyableItem(String name, Material material, int amount, int slot, String... lore) {
-        super(name, new ItemStack(material, amount), lore == null ? new String[0] : lore);
+    public BuyableItem(String name, Material material, int amount, int slot, Map<SpawnerType, Integer> costsPerSpawnerType, String... lore) {
+        super(name, new ItemStack(material, amount), getLore(costsPerSpawnerType, lore));
         this.slot = slot;
+        this.costsPerSpawnerType = costsPerSpawnerType;
+    }
+
+    private static String[] getLore(Map<SpawnerType, Integer> costsPerSpawnerType, String... baseLore) {
+        List<String> lore = new ArrayList<>(Arrays.asList(baseLore));
+
+        for (Map.Entry<SpawnerType, Integer> entry : costsPerSpawnerType.entrySet())
+            lore.add("Cost: " + ChatColor.WHITE + entry.getValue() + " " + entry.getKey());
+        return lore.toArray(new String[lore.size()]);
     }
 
     public void addCost(SpawnerType spawnerType, Integer price) {
@@ -49,22 +61,22 @@ public class BuyableItem extends MenuItem {
             Main.terminate("BuyableItem section does not contain 'slot' field");
         if (!section.containsKey("cost"))
             Main.terminate("BuyableItem section does not contain 'cost' field");
+        Map<SpawnerType, Integer> costs = loadCost((Map<String, Object>) section.get("cost"), BaseGameAPI.getInstance().getManager(SpawnersManager.class));
         BuyableItem item = new BuyableItem((String) section.get("name"),
                 Material.valueOf((String) section.get("material")),
-                (Integer) section.get("amount"),
+                (Integer) section.get("amount"), costs,
                 (Integer) section.get("slot"));
-        loadCost(item, (Map<String, Object>) section.get("cost"), BaseGameAPI.getInstance().getManager(SpawnersManager.class));
         item.getClickObservable().subscribe(event -> buy((Player) event.getWhoClicked(), item));
         return item;
     }
 
-    private static void loadCost(BuyableItem item, Map<String, Object> costSection, SpawnersManager spawnersManager) {
-        for (Map.Entry<String, Object> entry : costSection.entrySet()) {
-            SpawnerType type = spawnersManager.getSpawnerTypes().get(entry.getKey());
-            if (type == null)
-                Main.terminate("spawnertype " + entry.getKey() + " not found.");
-            item.addCost(type, (Integer) costSection.get(entry.getValue()));
-        }
+    private static Map<SpawnerType, Integer> loadCost(Map<String, Object> costSection, SpawnersManager spawnersManager) {
+        Map<SpawnerType, Integer> costBySpawnerTypes = costSection.entrySet().stream()
+                .filter(entry -> spawnersManager.getSpawnerTypes().containsKey(entry.getKey()))
+                .collect(Collectors.toMap(entry -> spawnersManager.getSpawnerTypes().get(entry.getKey()), entry -> (Integer) entry.getValue()));
+        if (costBySpawnerTypes.size() != costSection.size())
+            Main.terminate("A spawnType was not found in the item cost section");
+        return costBySpawnerTypes;
     }
 
     private static void buy(Player player, BuyableItem item) {
