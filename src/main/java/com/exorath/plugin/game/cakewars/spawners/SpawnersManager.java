@@ -44,6 +44,10 @@ public class SpawnersManager implements Manager {
         }
     }
 
+    public HashMap<String, SpawnerType> getSpawnerTypes() {
+        return spawnerTypes;
+    }
+
     private void loadSpawners(ConfigurationSection spawnersSection) {
         if(spawnersSection == null){
             System.out.println("No spawners section found");

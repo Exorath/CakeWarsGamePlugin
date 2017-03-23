@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import java.util.*;
 
 /**
+ * depends on spawnermanager
  * Created by toonsev on 3/18/2017.
  */
 public class ShopManager implements ListeningManager {

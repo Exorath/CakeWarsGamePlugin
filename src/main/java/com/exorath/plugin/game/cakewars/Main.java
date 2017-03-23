@@ -31,7 +31,7 @@ public class Main extends JavaPlugin{
         ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
         baseGameAPI.addManager(new SpawnersManager(spawnersSection));
         baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
-        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));
+        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 
