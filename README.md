@@ -12,6 +12,7 @@ flavors:
         - name: Weapons
           material: IRON_SWORD
           slot: 0
+          cost:
           items:
           - name: Wooden Sword
             material: WOODEN_SWORD
@@ -19,6 +20,10 @@ flavors:
             slot: 0
           lore:
           - Buy weapons here
+      spawnerTypes:
+        iron:
+          material: IRON_INGOT
+          interval: 40
 ```
 
 ## exomap.yml
@@ -45,10 +50,6 @@ lobby:
     y: 125
     z: 3
 spawners:
-  spawnerTypes:
-    iron:
-      material: IRON_INGOT
-      interval: 40
   spawners:
     spawner1:
       type: iron

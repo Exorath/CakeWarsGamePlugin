@@ -40,10 +40,10 @@ public class Main extends JavaPlugin{
         }
         String flavor = baseGameAPI.getManager(FlavorManager.class).getFlavor();
         ConfigurationSection flavorSection = getConfig().getConfigurationSection("flavors." + flavor);
-        ConfigurationSection teamsSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("teams");
-        baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), teamsSection));
-        ConfigurationSection spawnersSection = baseGameAPI.getMapsManager().getGameMap().getConfiguration().getConfigurationSection("spawners");
-        baseGameAPI.addManager(new SpawnersManager(spawnersSection));
+        FileConfiguration mapConfig = baseGameAPI.getMapsManager().getGameMap().getConfiguration();
+
+        baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), mapConfig.getConfigurationSection("teams")));
+        baseGameAPI.addManager(new SpawnersManager(mapConfig.getConfigurationSection("spawners"), flavorSection.getConfigurationSection("spawnerTypes")));
         baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
         baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
         baseGameAPI.addManager(new KitsManager(new KitServiceAPI(getKitServiceAddress()), configProvider.getKitPackageJson()));

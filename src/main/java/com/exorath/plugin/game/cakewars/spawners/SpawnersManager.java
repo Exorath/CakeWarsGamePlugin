@@ -20,13 +20,13 @@ public class SpawnersManager implements Manager {
     private HashMap<String, SpawnerType> spawnerTypes = new HashMap<>();
     private Set<Spawner> spawners = new HashSet<>();
 
-    public SpawnersManager(ConfigurationSection spawnersSection) {
+    public SpawnersManager(ConfigurationSection spawnersSection, ConfigurationSection spawnerTypesSection) {
         if(spawnersSection == null)
             Main.terminate("No spawnerssection found in map config.");
         this.spawnersSection = spawnersSection;
         for(String key : spawnersSection.getKeys(true))
             System.out.println(key);
-        loadSpawnerTypes(spawnersSection.getConfigurationSection("spawnerTypes"));
+        loadSpawnerTypes(spawnerTypesSection);
         loadSpawners(spawnersSection.getConfigurationSection("spawners"));
     }
 
