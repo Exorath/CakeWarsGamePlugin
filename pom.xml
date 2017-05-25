@@ -84,5 +84,15 @@
             <artifactId>ExoMenus</artifactId>
             <version>0.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.Exorath</groupId>
+            <artifactId>KitService</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Exorath</groupId>
+            <artifactId>ExoCommons</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
 </project>

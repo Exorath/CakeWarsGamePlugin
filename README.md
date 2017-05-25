@@ -60,3 +60,16 @@ flavorIds:
 - default
 - fast
 ```
+
+
+##config.json
+```json
+{
+"kitPackage": {
+  "seeKitServiceForKitPackageSpec": true
+}
+}
+```
+
+##Environment
+KIT_SERVICE_ADDRESS
