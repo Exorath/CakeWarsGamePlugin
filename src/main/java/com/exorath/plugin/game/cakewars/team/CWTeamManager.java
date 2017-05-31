@@ -1,10 +1,14 @@
 package com.exorath.plugin.game.cakewars.team;
 
+import com.exorath.exoteams.Team;
 import com.exorath.exoteams.TeamAPI;
+import com.exorath.exoteams.player.TeamPlayer;
+import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.lib.LocationSerialization;
 import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
+import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -24,7 +28,9 @@ public class CWTeamManager implements ListeningManager {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
+        Team team = teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
+        if(team != null)
+            BaseGameAPI.getInstance().getManager(PlayerManager.class);
     }
 
     @EventHandler

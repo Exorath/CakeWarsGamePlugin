@@ -8,6 +8,7 @@ import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.game.cakewars.config.ConfigProvider;
 import com.exorath.plugin.game.cakewars.config.FileConfigProvider;
 import com.exorath.plugin.game.cakewars.kits.KitsManager;
+import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import com.exorath.plugin.game.cakewars.shop.ShopManager;
 import com.exorath.plugin.game.cakewars.spawners.SpawnersManager;
 import com.exorath.plugin.game.cakewars.startTeleport.StartTeleportManager;
@@ -47,6 +48,8 @@ public class Main extends JavaPlugin{
         baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
         baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
         baseGameAPI.addManager(new KitsManager(new KitServiceAPI(getKitServiceAddress()), configProvider.getKitPackageJson()));
+        baseGameAPI.addManager(new PlayerManager());
+
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 
