@@ -16,6 +16,7 @@ import java.util.HashMap;
  */
 public class KillManager implements ListeningManager {
     private HashMap<Player, Player> lastDamagerMap = new HashMap<>();
+    private HashMap<Player, Integer> killStreaks = new HashMap<>();
 
     @EventHandler
     public void onEntityDamageEntityEvent(EntityDamageByEntityEvent event) {
@@ -29,14 +30,28 @@ public class KillManager implements ListeningManager {
 
     @EventHandler
     public void onPlayerDieEvent(PlayerDeathEvent event) {
-        Location location = event.getEntity().getLocation();
-        event.getEntity().spigot().respawn();
-        event.getEntity().teleport(location);
+        respawn(event.getEntity());
+        killStreaks.remove(event.getEntity());
         if (!lastDamagerMap.containsKey(event.getEntity()))
             return;
-        CWKillEvent killEvent = new CWKillEvent(event.getEntity(), lastDamagerMap.get(event.getEntity()), event);
-        Bukkit.getPluginManager().callEvent(killEvent);
+        Player killer = lastDamagerMap.get(event.getEntity());
+        addStreak(killer);
+        Bukkit.getPluginManager().callEvent(new CWKillEvent(killer, event.getEntity(), event));
+    }
 
+    private void addStreak(Player player) {
+        if (killStreaks.containsKey(player))
+            killStreaks.put(player, killStreaks.get(player) + 1);
+        else
+            killStreaks.put(player, 1);
+        if (killStreaks.get(player) >= 2)
+            Bukkit.getPluginManager().callEvent(new KillStreakEvent(player, killStreaks.get(player)));
+    }
+
+    private void respawn(Player player) {
+        Location location = player.getLocation();
+        player.spigot().respawn();
+        player.teleport(location);
     }
 
 

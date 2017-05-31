@@ -1,4 +1,4 @@
-package com.exorath.plugin.game.cakewars.victory;
+package com.exorath.plugin.game.cakewars.rewards;
 
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.service.currency.api.CurrencyServiceAPI;
