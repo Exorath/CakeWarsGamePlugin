@@ -35,6 +35,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,12 +64,13 @@ public class PlayerManager implements ListeningManager {
     }
 
     @EventHandler
-    public void onGameStateChange(StateChangeEvent event){
-        if(event.getNewState() == State.STARTED){
+    public void onGameStateChange(StateChangeEvent event) {
+        if (event.getNewState() == State.STARTED) {
             BaseGameAPI.getInstance().getTeamAPI().getTeams().forEach(team ->
-            team.getPlayers().forEach(player -> getPlayer(TeamManager.getPlayer(player)).setState(PlayerState.PLAYING)));
+                    team.getPlayers().forEach(player -> getPlayer(TeamManager.getPlayer(player)).setState(PlayerState.PLAYING)));
         }
     }
+
     public CWPlayer getPlayer(Player player) {
         CWPlayer cwPlayer = players.get(player);
         if (cwPlayer == null)
@@ -79,9 +81,7 @@ public class PlayerManager implements ListeningManager {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         event.getEntity().setGameMode(GameMode.SPECTATOR);
-        Location location = event.getEntity().getLocation();
         event.getEntity().spigot().respawn();
-        event.getEntity().teleport(location);
         CWPlayer cwPlayer = getPlayer(event.getEntity());
         if (cwPlayer.getState() == PlayerState.PLAYING) {
             cwPlayer.setState(PlayerState.RESPAWNING);
@@ -96,5 +96,15 @@ public class PlayerManager implements ListeningManager {
                 }
             }, RESPAWN_SECONDS * 20);
         }
+    }
+
+    @EventHandler
+    public void respawnEvent(PlayerRespawnEvent event) {
+        CWPlayer cwPlayer = players.get(event.getPlayer());
+        Location location = event.getPlayer().getLocation();
+        if (location.getY() < -60)
+            location = cwPlayer.getTeam().getSpawnLocation();
+        if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING)
+            event.setRespawnLocation(event.getPlayer().getLocation());
     }
 }
