@@ -44,7 +44,7 @@ import java.util.Map;
  * Created by toonsev on 5/31/2017.
  */
 public class PlayerManager implements ListeningManager {
-    private static final int RESPAWN_SECONDS = 5;
+    private static final int RESPAWN_SECONDS = 8;
     private Map<Player, CWPlayer> players = new HashMap<>();
 
     public PlayerManager() {
@@ -104,7 +104,10 @@ public class PlayerManager implements ListeningManager {
         Location location = event.getPlayer().getLocation();
         if (location.getY() < -60)
             location = cwPlayer.getTeam().getSpawnLocation();
-        if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING)
+        if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING) {
+            event.getPlayer().sendMessage(ChatColor.GRAY + "You " + ChatColor.RED + "died" + ChatColor.GRAY + ". Respawning in " + ChatColor.RED + RESPAWN_SECONDS + " seconds.");
             event.setRespawnLocation(event.getPlayer().getLocation());
+
+        }
     }
 }
