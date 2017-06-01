@@ -28,6 +28,7 @@ import com.exorath.plugin.game.cakewars.team.CWTeam;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -78,6 +79,9 @@ public class PlayerManager implements ListeningManager {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         event.getEntity().setGameMode(GameMode.SPECTATOR);
+        Location location = event.getEntity().getLocation();
+        event.getEntity().spigot().respawn();
+        event.getEntity().teleport(location);
         CWPlayer cwPlayer = getPlayer(event.getEntity());
         if (cwPlayer.getState() == PlayerState.PLAYING) {
             cwPlayer.setState(PlayerState.RESPAWNING);
