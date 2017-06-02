@@ -32,6 +32,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -80,10 +81,12 @@ public class PlayerManager implements ListeningManager {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        CWPlayer cwPlayer = getPlayer(event.getEntity());
         event.getEntity().setGameMode(GameMode.SPECTATOR);
         event.getEntity().spigot().respawn();
-        CWPlayer cwPlayer = getPlayer(event.getEntity());
-        if (cwPlayer.getState() == PlayerState.PLAYING) {
+        if (cwPlayer == null || cwPlayer.getTeam() == null || !cwPlayer.getTeam().isEggAlive())
+            cwPlayer.setState(PlayerState.SPECTATOR);
+        else if (cwPlayer.getState() == PlayerState.PLAYING) {
             cwPlayer.setState(PlayerState.RESPAWNING);
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                 if (cwPlayer.getState() == PlayerState.RESPAWNING) {
@@ -99,15 +102,22 @@ public class PlayerManager implements ListeningManager {
     }
 
     @EventHandler
+    public void onPlayerDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            CWPlayer cwPlayer = players.get(event.getEntity());
+            if (cwPlayer != null && cwPlayer.getState() != PlayerState.PLAYING)
+                event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void respawnEvent(PlayerRespawnEvent event) {
         CWPlayer cwPlayer = players.get(event.getPlayer());
         Location location = event.getPlayer().getLocation();
         if (location.getY() < -60)
             location = cwPlayer.getTeam().getSpawnLocation();
-        if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING) {
-            event.getPlayer().sendMessage(ChatColor.GRAY + "You " + ChatColor.RED + "died" + ChatColor.GRAY + ". Respawning in " + ChatColor.RED + RESPAWN_SECONDS + " seconds.");
-            event.setRespawnLocation(event.getPlayer().getLocation());
-
-        }
+        if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING)
+            event.getPlayer().sendMessage(ChatColor.GRAY + "You " + ChatColor.RED + "died" + ChatColor.GRAY + ". Respawning in " + ChatColor.RED + RESPAWN_SECONDS + " seconds" + ChatColor.GRAY + ".");
+        event.setRespawnLocation(event.getPlayer().getLocation());
     }
 }

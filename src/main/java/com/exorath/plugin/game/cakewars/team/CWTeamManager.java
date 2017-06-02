@@ -25,6 +25,7 @@ import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -61,6 +62,8 @@ public class CWTeamManager implements ListeningManager {
     }
 
     private void loadTeam(ConfigurationSection teamSection) {
+        if (!teamSection.contains("name"))
+            Main.terminate("No name in team map section");
         if (!teamSection.contains("spawnLocation"))
             Main.terminate("No spawnLocation in team map section");
         if (!teamSection.contains("cakeLocation"))
@@ -70,6 +73,7 @@ public class CWTeamManager implements ListeningManager {
         World world = Main.getInstance().getMapsManager().getGameMap().getWorld();
         int maxPlayers = teamSection.contains("maxPlayers") ? teamSection.getInt("maxPlayers") : 0;
         teamAPI.addTeam(new CWTeam(
+                ChatColor.translateAlternateColorCodes('&',teamSection.getString("name")),
                 LocationSerialization.getLocation(world, teamSection.getConfigurationSection("cakeLocation")),
                 LocationSerialization.getLocation(world, teamSection.getConfigurationSection("spawnLocation")),
                 LocationSerialization.getLocation(world, teamSection.getConfigurationSection("primaryShopLocation")),

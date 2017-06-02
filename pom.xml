@@ -94,5 +94,10 @@
             <artifactId>ExoCommons</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.Exorath</groupId>
+            <artifactId>ExoProtection</artifactId>
+            <version>0.0.15</version>
+        </dependency>
     </dependencies>
 </project>

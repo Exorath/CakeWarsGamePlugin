@@ -16,7 +16,11 @@
 
 package com.exorath.plugin.game.cakewars.kill;
 
+import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.game.cakewars.players.CWPlayer;
+import com.exorath.plugin.game.cakewars.players.PlayerManager;
+import com.exorath.plugin.game.cakewars.players.PlayerState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -46,7 +50,6 @@ public class KillManager implements ListeningManager {
 
     @EventHandler
     public void onPlayerDieEvent(PlayerDeathEvent event) {
-        respawn(event.getEntity());
         killStreaks.remove(event.getEntity());
         if (!lastDamagerMap.containsKey(event.getEntity()))
             return;
@@ -65,9 +68,13 @@ public class KillManager implements ListeningManager {
     }
 
     private void respawn(Player player) {
-        Location location = player.getLocation();
+        CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(player);
+        if(cwPlayer == null || cwPlayer.getTeam() == null || !cwPlayer.getTeam().isEggAlive()){
+            cwPlayer.setState(PlayerState.SPECTATOR);
+            player.spigot().respawn();
+            return;
+        }
         player.spigot().respawn();
-        player.teleport(location);
     }
 
 

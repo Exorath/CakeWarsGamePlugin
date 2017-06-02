@@ -23,15 +23,30 @@ import org.bukkit.Location;
  * Created by toonsev on 3/15/2017.
  */
 public class CWTeam extends Team {
+    private boolean eggAlive = true;
+    private String name;
     private Location spawnLocation;
     private Location cakeLocation;
     private Location primaryShopLocation;
 
-    public CWTeam(Location spawnLocation, Location cakeLocation, Location primaryShopLocation, int maxPlayers) {
+    public CWTeam(String name, Location spawnLocation, Location cakeLocation, Location primaryShopLocation, int maxPlayers) {
+        this.name = name;
         this.spawnLocation = spawnLocation;
         this.cakeLocation = cakeLocation;
         this.primaryShopLocation = primaryShopLocation;
         setMaxPlayers(maxPlayers);
+    }
+
+    public void setEggAlive(boolean eggAlive) {
+        this.eggAlive = eggAlive;
+    }
+
+    public boolean isEggAlive() {
+        return eggAlive;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Location getCakeLocation() {
