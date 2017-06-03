@@ -24,6 +24,7 @@ import org.bukkit.Location;
  */
 public class CWTeam extends Team {
     private boolean eggAlive = true;
+    private boolean playing = true;
     private String name;
     private Location spawnLocation;
     private Location cakeLocation;
@@ -35,6 +36,14 @@ public class CWTeam extends Team {
         this.cakeLocation = cakeLocation;
         this.primaryShopLocation = primaryShopLocation;
         setMaxPlayers(maxPlayers);
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
+    public boolean isPlaying() {
+        return playing;
     }
 
     public void setEggAlive(boolean eggAlive) {

@@ -119,9 +119,9 @@ public class ShopManager implements ListeningManager {
     private Set<HologramLocation> locations = new HashSet<>();
 
     private void loadShopHologram(Location location) {
-        HologramLocation hologramLocation = new HologramLocation(location.clone().add(0, 3d, 0));
+        HologramLocation hologramLocation = new HologramLocation(location.clone().add(0, 2.75d, 0));
         locations.add(hologramLocation);
         hologramLocation.addText(new ChatColorText(new PlainText("Item Shop")).color(ChatColor.GREEN), DisplayProperties.create(0, NeverRemover.never()));
-        hologramLocation.addText(new ChatColorText(new PlainText("(Right Click)")).color(ChatColor.GRAY), DisplayProperties.create(-1, NeverRemover.never()));
+        hologramLocation.addText(new ChatColorText(new PlainText("(Right Click)")).color(ChatColor.AQUA), DisplayProperties.create(-1, NeverRemover.never()));
     }
 }
