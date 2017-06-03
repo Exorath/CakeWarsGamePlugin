@@ -26,10 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -56,6 +53,10 @@ public class BuyableItem extends MenuItem {
         for (Map.Entry<SpawnerType, Integer> entry : costsPerSpawnerType.entrySet())
             lore.add("Cost: " + ChatColor.WHITE + entry.getValue() + " " + entry.getKey().getName());
         return lore.toArray(new String[lore.size()]);
+    }
+
+    public Map<SpawnerType, Integer> getCostsPerSpawnerType() {
+        return costsPerSpawnerType;
     }
 
     public void addCost(SpawnerType spawnerType, Integer price) {
@@ -96,6 +97,45 @@ public class BuyableItem extends MenuItem {
     }
 
     private static void buy(Player player, BuyableItem item) {
-        System.out.println("TODO: Buy " + item.getTitle() + " for " + player.getName());
+        boolean enough = true;
+
+        for (Map.Entry<SpawnerType, Integer> entry : item.getCostsPerSpawnerType().entrySet()) {
+            if (!player.getInventory().contains(entry.getKey().getMaterial(), entry.getValue())) {
+                enough = false;
+                player.sendMessage(ChatColor.RED + "Not enough " + entry.getKey().getName());
+            }
+        }
+        if (!enough)
+            return;
+        handlePurchase(player, item);
+        player.sendMessage(ChatColor.GREEN + "Bought " + item.getTitle() + "!");
+        player.getInventory().addItem(item.getItemStack(player)).forEach((integer, itemStack) -> player.getWorld().dropItem(player.getLocation(), itemStack));
+
+    }
+
+    private static void handlePurchase(Player player, BuyableItem item) {
+        HashMap<Material, Integer> materials = new HashMap<>();
+        item.getCostsPerSpawnerType().forEach((spawnerType, integer) -> {
+            if (materials.containsKey(spawnerType.getMaterial()))
+                materials.put(spawnerType.getMaterial(), materials.get(spawnerType.getMaterial()) + integer);
+            else
+                materials.put(spawnerType.getMaterial(), integer);
+        });
+        for (ItemStack itemStack : player.getInventory()) {
+            if (materials.containsKey(itemStack.getType())) {
+                int amount = materials.get(itemStack.getType());
+                if (itemStack.getAmount() > amount) {
+                    itemStack.setAmount(itemStack.getAmount() - amount);
+                    break;
+                } else if (itemStack.getAmount() == amount) {
+                    itemStack.setType(Material.AIR);
+                    break;
+                } else {
+                    materials.put(itemStack.getType(), amount - itemStack.getAmount());
+                    itemStack.setType(Material.AIR);
+                }
+            }
+        }
+
     }
 }
