@@ -87,7 +87,7 @@
         <dependency>
             <groupId>com.github.Exorath</groupId>
             <artifactId>KitService</artifactId>
-            <version>0.0.4</version>
+            <version>0.0.13</version>
         </dependency>
         <dependency>
             <groupId>com.github.Exorath</groupId>

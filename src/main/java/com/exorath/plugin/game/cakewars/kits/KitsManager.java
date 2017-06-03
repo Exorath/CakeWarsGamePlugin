@@ -23,6 +23,7 @@ import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.basegame.team.TeamManager;
+import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.players.CWPlayer;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import com.exorath.plugin.game.cakewars.players.PlayerState;
@@ -33,6 +34,8 @@ import com.exorath.service.kit.res.Kit;
 import com.exorath.service.kit.res.KitPackage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
@@ -59,10 +62,10 @@ public class KitsManager implements ListeningManager {
         return GSON.fromJson(kitPackage, KitPackage.class);
     }
 
-    private static Collection<ItemStack> getItems(Kit kit) {
+    private static ArrayList<ItemStack> getItems(Kit kit) {
         if (!kit.getMeta().has("items"))
             return new ArrayList<>(0);
-        List<ItemStack> items = new ArrayList<>(kit.getMeta().get("items").getAsJsonArray().size());
+        ArrayList<ItemStack> items = new ArrayList<>(kit.getMeta().get("items").getAsJsonArray().size());
         kit.getMeta().get("items").getAsJsonArray().forEach(jsonElement -> items.add(ItemStackSerialize.toItemStack(jsonElement.getAsJsonObject())));
         return items;
     }
@@ -88,6 +91,17 @@ public class KitsManager implements ListeningManager {
 
     private void updatePlayer(CWPlayer cwPlayer) {
         cwPlayer.getPlayer().getInventory().clear();
+        String uuid = cwPlayer.getPlayer().getUniqueId().toString();
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+            String kitId = kitServiceAPI.getCurrentKit("CW", uuid).getKit();
+            Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
+                Kit kit = kitPackage.getKits().get(kitId);
+                if (kit == null)
+                    cwPlayer.getPlayer().sendMessage(ChatColor.RED + "You're selected kit no longer exists.");
+                else
+                    cwPlayer.getPlayer().getInventory().addItem(getItems(kit));
+            });
+        });
     }
 
 }
