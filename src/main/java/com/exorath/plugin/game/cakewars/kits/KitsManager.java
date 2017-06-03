@@ -66,9 +66,9 @@ public class KitsManager implements ListeningManager {
     private static ItemStack[] getItems(Kit kit) {
         if (!kit.getMeta().has("items"))
             return new ItemStack[]{};
-        ItemStack[]  items = new ItemStack[kit.getMeta().get("items").getAsJsonArray().size()];
+        ItemStack[] items = new ItemStack[kit.getMeta().get("items").getAsJsonArray().size()];
         JsonArray jsonArray = kit.getMeta().get("items").getAsJsonArray();
-        for(int i = 0; i < items.length; i++)
+        for (int i = 0; i < items.length; i++)
             items[i] = ItemStackSerialize.toItemStack(jsonArray.get(i).getAsJsonObject());
         return items;
     }
@@ -97,6 +97,8 @@ public class KitsManager implements ListeningManager {
         String uuid = cwPlayer.getPlayer().getUniqueId().toString();
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
             String kitId = kitServiceAPI.getCurrentKit("CW", uuid).getKit();
+            if (kitId == null)
+                return;
             Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
                 Kit kit = kitPackage.getKits().get(kitId);
                 if (kit == null)
