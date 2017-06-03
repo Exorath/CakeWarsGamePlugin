@@ -23,8 +23,10 @@ import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 
 import java.util.HashMap;
@@ -100,5 +102,12 @@ public class SpawnersManager implements ListeningManager {
         if (event.getEntity().getItemStack() instanceof SpawnerItemStack)
             event.setCancelled(false);
     }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        if (event.getEntity() instanceof Item)
+            event.setCancelled(false);
+    }
+
 
 }
