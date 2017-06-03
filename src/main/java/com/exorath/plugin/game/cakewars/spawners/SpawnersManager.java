@@ -17,11 +17,15 @@
 package com.exorath.plugin.game.cakewars.spawners;
 
 import com.exorath.plugin.basegame.lib.LocationSerialization;
+import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.manager.Manager;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.ItemSpawnEvent;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,24 +34,24 @@ import java.util.Set;
 /**
  * Created by toonsev on 3/17/2017.
  */
-public class SpawnersManager implements Manager {
+public class SpawnersManager implements ListeningManager {
     private ConfigurationSection spawnersSection;
 
     private HashMap<String, SpawnerType> spawnerTypes = new HashMap<>();
     private Set<Spawner> spawners = new HashSet<>();
 
     public SpawnersManager(ConfigurationSection spawnersSection, ConfigurationSection spawnerTypesSection) {
-        if(spawnersSection == null)
+        if (spawnersSection == null)
             Main.terminate("No spawnerssection found in map config.");
         this.spawnersSection = spawnersSection;
-        for(String key : spawnersSection.getKeys(true))
+        for (String key : spawnersSection.getKeys(true))
             System.out.println(key);
         loadSpawnerTypes(spawnerTypesSection);
         loadSpawners(spawnersSection.getConfigurationSection("spawners"));
     }
 
     private void loadSpawnerTypes(ConfigurationSection spawnerTypesSection) {
-        if(spawnerTypesSection == null)
+        if (spawnerTypesSection == null)
             Main.terminate("No spawnerTypes section found");
         for (String key : spawnerTypesSection.getKeys(false)) {
             ConfigurationSection typeSection = spawnerTypesSection.getConfigurationSection(key);
@@ -55,7 +59,7 @@ public class SpawnersManager implements Manager {
                 Main.terminate("No type material in a spawnerType config");
             if (!typeSection.contains("interval"))
                 Main.terminate("No interval field in a spawnerType config");
-            SpawnerType type = new SpawnerType(typeSection.getString("name", null),Material.valueOf(typeSection.getString("material")), typeSection.getLong("interval"));
+            SpawnerType type = new SpawnerType(typeSection.getString("name", null), Material.valueOf(typeSection.getString("material")), typeSection.getLong("interval"));
             spawnerTypes.put(key, type);
         }
     }
@@ -65,7 +69,7 @@ public class SpawnersManager implements Manager {
     }
 
     private void loadSpawners(ConfigurationSection spawnersSection) {
-        if(spawnersSection == null){
+        if (spawnersSection == null) {
             System.out.println("No spawners section found");
             Main.terminate();
         }
@@ -85,7 +89,13 @@ public class SpawnersManager implements Manager {
             spawner.start();
             spawners.add(spawner);
         }
+
     }
 
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
+    public void onItemDrop(ItemSpawnEvent event) {
+        if (event.getEntity().getItemStack() instanceof SpawnerItemStack)
+            event.setCancelled(false);
+    }
 
 }

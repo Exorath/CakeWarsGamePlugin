@@ -32,6 +32,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.omg.CORBA.COMM_FAILURE;
@@ -90,12 +91,15 @@ public class Spawner {
                 return;
             if (BaseGameAPI.getInstance().getStateManager().getState() != State.STARTED)
                 return;
-            if (location.getWorld() != null)
-                location.getWorld().dropItem(location, new ItemStack(type.getMaterial()));
+            if (location.getWorld() != null) {
+                location.getWorld().dropItem(location, new SpawnerItemStack(type.getMaterial()));
+            }
             else
                 System.out.println("Spawner: no world found");
         }
     }
+
+
 
     private class Countdown extends BukkitRunnable implements HUDText {
         private PublishSubject<List<TextComponent>> subject = PublishSubject.create();
