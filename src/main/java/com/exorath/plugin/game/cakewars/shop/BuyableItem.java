@@ -51,6 +51,7 @@ public class BuyableItem extends MenuItem {
         this.slot = slot;
         this.costsPerSpawnerType = costsPerSpawnerType;
         this.name = name;
+        this.material = material;
         this.amount =amount;
         this.lore = lore;
     }
