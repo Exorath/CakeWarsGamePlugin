@@ -59,7 +59,7 @@ public class Spawner {
         this.location = location;
         this.type = type;
         if (showHolo) {
-            hologram = new HologramLocation(location.clone().add(0, 1.5d, 0));
+            this.hologram = new HologramLocation(location.clone().add(0, 1.5d, 0));
             addTypeLineToHologram();
         }
     }
@@ -116,7 +116,8 @@ public class Spawner {
         private long remaining = type.getInterval();
 
         public Countdown() {
-            hologram.addText(this, DisplayProperties.create(-1, NeverRemover.never()));
+            if (showHolo)
+                hologram.addText(this, DisplayProperties.create(-1, NeverRemover.never()));
         }
 
         @Override

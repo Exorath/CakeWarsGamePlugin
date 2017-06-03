@@ -16,6 +16,7 @@
 
 package com.exorath.plugin.game.cakewars.spawners;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 
 /**
@@ -34,7 +35,7 @@ public class SpawnerType {
     }
 
     public String getName() {
-        return name;
+        return ChatColor.translateAlternateColorCodes('&',name);
     }
 
     public long getInterval() {
