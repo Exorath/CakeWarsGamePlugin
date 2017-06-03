@@ -128,11 +128,11 @@ public class BuyableItem extends MenuItem {
                     itemStack.setAmount(itemStack.getAmount() - amount);
                     break;
                 } else if (itemStack.getAmount() == amount) {
-                    itemStack.setType(Material.AIR);
+                    player.getInventory().remove(itemStack);
                     break;
                 } else {
                     materials.put(itemStack.getType(), amount - itemStack.getAmount());
-                    itemStack.setType(Material.AIR);
+                    player.getInventory().remove(itemStack);
                 }
             }
         }
