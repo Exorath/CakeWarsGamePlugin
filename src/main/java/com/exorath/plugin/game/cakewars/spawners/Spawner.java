@@ -56,13 +56,13 @@ public class Spawner {
         this.location = location;
         this.type = type;
         if(showHolo) {
-            hologram = new HologramLocation(location);
+            hologram = new HologramLocation(location.clone().add(0, 1.5d, 0));
             addTypeLineToHologram();
         }
     }
 
     private void addTypeLineToHologram(){
-        String nameLine = type.getName() == null ? ChatColor.GREEN + type.getMaterial().getData().getName() : type.getName();
+        String nameLine = type.getName() == null ? ChatColor.GREEN + type.getMaterial().getData().getTypeName() : type.getName();
         Stream<TextComponent> textComponentStream = Arrays.asList(TextComponent.fromLegacyText(nameLine)).stream().map(component -> (TextComponent) component);
         hologram.addText(PlainText.components(textComponentStream.collect(Collectors.toList())), DisplayProperties.create(0, NeverRemover.never()));
     }

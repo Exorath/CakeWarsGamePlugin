@@ -22,15 +22,21 @@ import com.exorath.plugin.basegame.clickableEntities.ClickableEntitiesManager;
 import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.basegame.state.StateChangeEvent;
+import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.team.CWTeam;
 import io.reactivex.Observable;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.inventory.Merchant;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.*;
 
@@ -76,8 +82,25 @@ public class ShopManager implements ListeningManager {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+    public void onSpawn(EntitySpawnEvent event){
+        if(event.getEntity().hasMetadata("shopEntity"))
+            event.setCancelled(false);
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event){
+        if(event.getInventory() instanceof Merchant)
+            event.setCancelled(true);
+    }
+
     private void loadPrimaryShop(Location primaryShopLocation) {
-        Entity entity = primaryShopLocation.getWorld().spawnEntity(primaryShopLocation, EntityType.VILLAGER);
+        Villager entity = primaryShopLocation.getWorld().spawn(primaryShopLocation, Villager.class, villager -> {
+            villager.setMetadata("doNotDespawn", new FixedMetadataValue(Main.getInstance(), ""));
+            villager.setMetadata("shopEntity", new FixedMetadataValue(Main.getInstance(), ""));
+
+        });
+        entity.setProfession(Villager.Profession.LIBRARIAN);
         ClickableEntity clickableEntity = clickableEntitiesManager.getClickEntAPI().makeClickable(entity);
         Observable<PlayerInteractAtEntityEvent> obs = clickableEntity.getInteractObservable();
         obs.subscribe(event -> this.shopMenu.getMenu().open(event.getPlayer()));
