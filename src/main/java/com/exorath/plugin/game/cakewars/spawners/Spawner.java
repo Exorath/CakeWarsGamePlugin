@@ -20,7 +20,6 @@ import com.exorath.exoHUD.DisplayProperties;
 import com.exorath.exoHUD.HUDText;
 import com.exorath.exoHUD.locations.row.HologramLocation;
 import com.exorath.exoHUD.removers.NeverRemover;
-import com.exorath.exoHUD.texts.CompositeText;
 import com.exorath.exoHUD.texts.PlainText;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.state.State;
@@ -28,15 +27,11 @@ import com.exorath.plugin.game.cakewars.Main;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.omg.CORBA.COMM_FAILURE;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,6 +54,7 @@ public class Spawner {
         this.location = location;
         this.type = type;
         if (showHolo) {
+            System.out.println("Holo is loading.");
             this.hologram = new HologramLocation(location.clone().add(0, 1.5d, 0));
             addTypeLineToHologram();
         }
@@ -128,6 +124,7 @@ public class Spawner {
                 return;
             if (remaining <= 0) {
                 if (location.getWorld() != null) {
+                    System.out.println("dropping");
                     location.getWorld().dropItem(location, new ItemStack(type.getMaterial()));
                 } else
                     System.out.println("Spawner: no world found");
@@ -140,7 +137,6 @@ public class Spawner {
                     update();
                 remaining -= 20l;
             }
-
         }
 
         private void updateSpawned() {

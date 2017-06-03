@@ -25,6 +25,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,6 +36,10 @@ import java.util.stream.Collectors;
  */
 public class BuyableItem extends MenuItem {
     private int slot;
+    private String name;
+    private Material material;
+    private String[] lore;
+    private int amount;
     private Map<SpawnerType, Integer> costsPerSpawnerType;
 
     public BuyableItem(String name, Material material, int amount, Map<SpawnerType, Integer> costsPerSpawnerType, int slot) {
@@ -45,6 +50,9 @@ public class BuyableItem extends MenuItem {
         super(name, new ItemStack(material, amount), getLore(costsPerSpawnerType, lore));
         this.slot = slot;
         this.costsPerSpawnerType = costsPerSpawnerType;
+        this.name = name;
+        this.amount =amount;
+        this.lore = lore;
     }
 
     private static String[] getLore(Map<SpawnerType, Integer> costsPerSpawnerType, String... baseLore) {
@@ -109,7 +117,7 @@ public class BuyableItem extends MenuItem {
             return;
         handlePurchase(player, item);
         player.sendMessage(ChatColor.GREEN + "Bought " + item.getTitle() + "!");
-        player.getInventory().addItem(item.getItemStack(player)).forEach((integer, itemStack) -> player.getWorld().dropItem(player.getLocation(), itemStack));
+        player.getInventory().addItem(item.getActualItemStack(player)).forEach((integer, itemStack) -> player.getWorld().dropItem(player.getLocation(), itemStack));
 
     }
 
@@ -120,14 +128,12 @@ public class BuyableItem extends MenuItem {
                 materials.put(spawnerType.getMaterial(), materials.get(spawnerType.getMaterial()) + integer);
             else
                 materials.put(spawnerType.getMaterial(), integer);
-            System.out.println(spawnerType.getMaterial().toString() + ": " + integer);
         });
-            Set<Integer> toRemove = new HashSet<>();
-        for(int i = 0; i < player.getInventory().getSize(); i ++){
+        Set<Integer> toRemove = new HashSet<>();
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
             ItemStack itemStack = player.getInventory().getItem(i);
             if (itemStack != null && itemStack.getType() != null && materials.containsKey(itemStack.getType())) {
                 int amount = materials.get(itemStack.getType());
-                System.out.println(amount);
                 if (itemStack.getAmount() > amount) {
                     itemStack.setAmount(itemStack.getAmount() - amount);
                     break;
@@ -141,5 +147,14 @@ public class BuyableItem extends MenuItem {
             }
         }
         toRemove.forEach(slot -> player.getInventory().clear(slot));
+    }
+
+    private ItemStack getActualItemStack(Player player){
+        ItemStack is = new ItemStack(material, amount);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName(name);
+        if(lore != null)
+            im.setLore(Arrays.asList(lore));
+        return is;
     }
 }

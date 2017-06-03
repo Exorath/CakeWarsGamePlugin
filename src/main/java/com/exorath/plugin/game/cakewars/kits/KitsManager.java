@@ -74,17 +74,6 @@ public class KitsManager implements ListeningManager {
     }
 
     @EventHandler
-    public void onStateChange(StateChangeEvent event) {
-        if (event.getNewState() == State.STARTED) {
-            for (Team team : BaseGameAPI.getInstance().getTeamAPI().getTeams()) {
-                team.getPlayers().stream()
-                        .map(teamPlayer -> BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer)))
-                        .forEach(cwPlayer -> updatePlayer(cwPlayer));
-            }
-        }
-    }
-
-    @EventHandler
     public void onPlayerStateChange(PlayerStateChangeEvent event) {
         if (event.getNewState() == PlayerState.PLAYING) {
             if (BaseGameAPI.getInstance().getStateManager().getState() == State.STARTED || BaseGameAPI.getInstance().getStateManager().getState() == State.INITIALIZING)
