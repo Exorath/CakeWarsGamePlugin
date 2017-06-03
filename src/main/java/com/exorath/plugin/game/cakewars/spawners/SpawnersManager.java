@@ -55,7 +55,7 @@ public class SpawnersManager implements Manager {
                 Main.terminate("No type material in a spawnerType config");
             if (!typeSection.contains("interval"))
                 Main.terminate("No interval field in a spawnerType config");
-            SpawnerType type = new SpawnerType(Material.valueOf(typeSection.getString("material")), typeSection.getLong("interval"));
+            SpawnerType type = new SpawnerType(typeSection.getString("name", null),Material.valueOf(typeSection.getString("material")), typeSection.getLong("interval"));
             spawnerTypes.put(key, type);
         }
     }
@@ -86,5 +86,6 @@ public class SpawnersManager implements Manager {
             spawners.add(spawner);
         }
     }
+
 
 }

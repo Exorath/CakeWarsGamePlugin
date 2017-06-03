@@ -186,7 +186,7 @@ public class LobbyProtectionConfiguration implements ProtectionConfiguration {
 
     @Override
     public boolean canItemSpawn() {
-        return false;
+        return true;
     }
 
     @Override

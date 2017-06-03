@@ -99,5 +99,11 @@
             <artifactId>ExoProtection</artifactId>
             <version>0.0.15</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.exorath</groupId>
+            <artifactId>ExoHUD</artifactId>
+            <version>1.0.13</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

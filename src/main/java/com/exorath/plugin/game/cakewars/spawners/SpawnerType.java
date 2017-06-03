@@ -22,12 +22,19 @@ import org.bukkit.Material;
  * Created by toonsev on 3/17/2017.
  */
 public class SpawnerType {
+    private String name;
+
     private Material material;
     private long interval;
 
-    public SpawnerType(Material material, long interval) {
+    public SpawnerType(String name, Material material, long interval) {
+        this.name = name;
         this.material = material;
         this.interval = interval;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public long getInterval() {
