@@ -33,6 +33,7 @@ import com.exorath.service.kit.api.KitServiceAPI;
 import com.exorath.service.kit.res.Kit;
 import com.exorath.service.kit.res.KitPackage;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -62,11 +63,13 @@ public class KitsManager implements ListeningManager {
         return GSON.fromJson(kitPackage, KitPackage.class);
     }
 
-    private static ArrayList<ItemStack> getItems(Kit kit) {
+    private static ItemStack[] getItems(Kit kit) {
         if (!kit.getMeta().has("items"))
-            return new ArrayList<>(0);
-        ArrayList<ItemStack> items = new ArrayList<>(kit.getMeta().get("items").getAsJsonArray().size());
-        kit.getMeta().get("items").getAsJsonArray().forEach(jsonElement -> items.add(ItemStackSerialize.toItemStack(jsonElement.getAsJsonObject())));
+            return new ItemStack[]{};
+        ItemStack[]  items = new ItemStack[kit.getMeta().get("items").getAsJsonArray().size()];
+        JsonArray jsonArray = kit.getMeta().get("items").getAsJsonArray();
+        for(int i = 0; i < items.length; i++)
+            items[i] = ItemStackSerialize.toItemStack(jsonArray.get(i).getAsJsonObject());
         return items;
     }
 
