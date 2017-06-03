@@ -118,6 +118,6 @@ public class PlayerManager implements ListeningManager {
             location = cwPlayer.getTeam().getSpawnLocation();
         if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING)
             event.getPlayer().sendMessage(ChatColor.GRAY + "You " + ChatColor.RED + "died" + ChatColor.GRAY + ". Respawning in " + ChatColor.RED + RESPAWN_SECONDS + " seconds" + ChatColor.GRAY + ".");
-        event.setRespawnLocation(event.getPlayer().getLocation());
+        event.setRespawnLocation(location);
     }
 }
