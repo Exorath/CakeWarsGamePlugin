@@ -90,7 +90,7 @@ public class ShopManager implements ListeningManager {
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event){
-        if(event.getInventory() instanceof Merchant)
+        if(event.getInventory() instanceof Merchant || event.getInventory().getHolder() instanceof Villager)
             event.setCancelled(true);
     }
 
@@ -100,6 +100,7 @@ public class ShopManager implements ListeningManager {
             villager.setMetadata("shopEntity", new FixedMetadataValue(Main.getInstance(), ""));
 
         });
+        entity.setAI(false);
         entity.setProfession(Villager.Profession.LIBRARIAN);
         ClickableEntity clickableEntity = clickableEntitiesManager.getClickEntAPI().makeClickable(entity);
         Observable<PlayerInteractAtEntityEvent> obs = clickableEntity.getInteractObservable();
