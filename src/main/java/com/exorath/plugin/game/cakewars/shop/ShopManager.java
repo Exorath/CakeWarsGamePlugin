@@ -17,6 +17,12 @@
 package com.exorath.plugin.game.cakewars.shop;
 
 import com.exorath.clickents.api.ClickableEntity;
+import com.exorath.exoHUD.DisplayProperties;
+import com.exorath.exoHUD.locations.row.HologramLocation;
+import com.exorath.exoHUD.removers.NeverRemover;
+import com.exorath.exoHUD.texts.ChatColorText;
+import com.exorath.exoHUD.texts.CompositeText;
+import com.exorath.exoHUD.texts.PlainText;
 import com.exorath.exoteams.Team;
 import com.exorath.plugin.basegame.clickableEntities.ClickableEntitiesManager;
 import com.exorath.plugin.basegame.manager.ListeningManager;
@@ -25,6 +31,7 @@ import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.team.CWTeam;
 import io.reactivex.Observable;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -36,6 +43,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.Merchant;
+import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.*;
@@ -59,17 +67,17 @@ public class ShopManager implements ListeningManager {
 
     }
 
-    private static ShopMenu loadMenu(ConfigurationSection section){
-        if(section == null)
+    private static ShopMenu loadMenu(ConfigurationSection section) {
+        if (section == null)
             return new ShopMenu();
         ShopMenu menu = new ShopMenu();
         List<HashMap<String, Object>> directoryMaps = (List<HashMap<String, Object>>) section.getList("directories", new ArrayList<HashMap>());
-        for(Map<String, Object> directoryMap : directoryMaps){
+        for (Map<String, Object> directoryMap : directoryMaps) {
             menu.addShopDirectory(ShopDirectory.load(menu, directoryMap));
-
         }
         return menu;
     }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onStateChange(StateChangeEvent event) {
         if (started)
@@ -83,14 +91,14 @@ public class ShopManager implements ListeningManager {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
-    public void onSpawn(EntitySpawnEvent event){
-        if(event.getEntity().hasMetadata("shopEntity"))
+    public void onSpawn(EntitySpawnEvent event) {
+        if (event.getEntity().hasMetadata("shopEntity"))
             event.setCancelled(false);
     }
 
-    @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent event){
-        if(event.getInventory() instanceof Merchant || event.getInventory().getHolder() instanceof Villager)
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        if (event.getInventory() instanceof MerchantInventory || event.getInventory().getHolder() instanceof Villager)
             event.setCancelled(true);
     }
 
@@ -100,10 +108,20 @@ public class ShopManager implements ListeningManager {
             villager.setMetadata("shopEntity", new FixedMetadataValue(Main.getInstance(), ""));
 
         });
+        loadShopHologram(entity.getLocation());
         entity.setAI(false);
         entity.setProfession(Villager.Profession.LIBRARIAN);
         ClickableEntity clickableEntity = clickableEntitiesManager.getClickEntAPI().makeClickable(entity);
         Observable<PlayerInteractAtEntityEvent> obs = clickableEntity.getInteractObservable();
         obs.subscribe(event -> this.shopMenu.getMenu().open(event.getPlayer()));
+    }
+
+    private Set<HologramLocation> locations = new HashSet<>();
+
+    private void loadShopHologram(Location location) {
+        HologramLocation hologramLocation = new HologramLocation(location.clone().add(0, 3d, 0));
+        locations.add(hologramLocation);
+        hologramLocation.addText(new ChatColorText(new PlainText("Item Shop")).color(ChatColor.GREEN), DisplayProperties.create(0, NeverRemover.never()));
+        hologramLocation.addText(new ChatColorText(new PlainText("(Right Click)")).color(ChatColor.GRAY), DisplayProperties.create(-1, NeverRemover.never()));
     }
 }

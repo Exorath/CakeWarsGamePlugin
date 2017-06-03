@@ -86,7 +86,7 @@ public class CakeManager implements ListeningManager {
             return;
         }
         CWTeam blockTeam = (CWTeam) teamByCake.get(event.getBlock());
-        if (blockTeam != null && !blockTeam.equals(cwPlayer.getTeam())) {
+        if (blockTeam != null && !blockTeam.equals(cwPlayer.getTeam()) && blockTeam.isEggAlive()) {
             blockTeam.setEggAlive(false);
             Bukkit.getPluginManager().callEvent(new CakeBreakEvent(cwPlayer, cwPlayer.getTeam(), event.getBlock()));
             Bukkit.broadcastMessage(ChatColor.GREEN + "Team " + blockTeam.getName() + ChatColor.GREEN + " egg has been destroyed.");

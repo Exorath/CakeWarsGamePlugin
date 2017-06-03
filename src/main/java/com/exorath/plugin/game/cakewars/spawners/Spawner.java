@@ -109,9 +109,9 @@ public class Spawner {
         public void run() {
             if (!started)
                 return;
+            if (BaseGameAPI.getInstance().getStateManager().getState() != State.STARTED)
+                return;
             if (remaining <= 0) {
-                if (BaseGameAPI.getInstance().getStateManager().getState() != State.STARTED)
-                    return;
                 if (location.getWorld() != null) {
                     location.getWorld().dropItem(location, new ItemStack(type.getMaterial()));
                 } else
