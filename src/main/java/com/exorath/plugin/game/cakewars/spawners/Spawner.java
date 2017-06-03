@@ -32,6 +32,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -50,19 +51,30 @@ public class Spawner {
     private SpawnerType type;
     private boolean started = false;
     private boolean showHolo = true;
+    private BaseBlock baseBlock;
 
     private HologramLocation hologram;
 
     public Spawner(Location location, SpawnerType type) {
         this.location = location;
         this.type = type;
-        if(showHolo) {
+        if (showHolo) {
             hologram = new HologramLocation(location.clone().add(0, 1.5d, 0));
             addTypeLineToHologram();
         }
     }
 
-    private void addTypeLineToHologram(){
+    public void setBaseBlock(BaseBlock baseBlock) {
+        this.baseBlock = baseBlock;
+        getBaseBlock().setType(baseBlock.getMaterial());
+    }
+
+    private Block getBaseBlock() {
+        return location.getBlock().getRelative(0, -1, 0);
+    }
+
+
+    private void addTypeLineToHologram() {
         String nameLine = type.getName() == null ? ChatColor.GREEN + type.getMaterial().name() : type.getName();
         Stream<TextComponent> textComponentStream = Arrays.asList(TextComponent.fromLegacyText(nameLine)).stream().map(component -> (TextComponent) component);
         hologram.addText(PlainText.components(textComponentStream.collect(Collectors.toList())), DisplayProperties.create(0, NeverRemover.never()));
@@ -93,12 +105,10 @@ public class Spawner {
                 return;
             if (location.getWorld() != null) {
                 location.getWorld().dropItem(location, new SpawnerItemStack(type.getMaterial()));
-            }
-            else
+            } else
                 System.out.println("Spawner: no world found");
         }
     }
-
 
 
     private class Countdown extends BukkitRunnable implements HUDText {

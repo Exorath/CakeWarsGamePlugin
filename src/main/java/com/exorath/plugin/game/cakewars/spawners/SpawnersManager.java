@@ -85,7 +85,10 @@ public class SpawnersManager implements ListeningManager {
             SpawnerType spawnerType = spawnerTypes.get(spawnerSection.getString("type"));
             if (spawnerType == null)
                 Main.terminate("a spawner type was not found in spawner config");
+
             Spawner spawner = new Spawner(LocationSerialization.getLocation(world, spawnerSection.getConfigurationSection("location")), spawnerType);
+            if (spawnerSection.contains("baseBlock"))
+                spawner.setBaseBlock(new BaseBlock(Material.valueOf(spawnerSection.getString("baseBlock"))));
             spawner.start();
             spawners.add(spawner);
         }
