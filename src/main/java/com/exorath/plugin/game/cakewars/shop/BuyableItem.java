@@ -122,8 +122,9 @@ public class BuyableItem extends MenuItem {
                 materials.put(spawnerType.getMaterial(), integer);
             System.out.println(spawnerType.getMaterial().toString() + ": " + integer);
         });
-        Set<ItemStack> toRemove = new HashSet<>();
-        for (ItemStack itemStack : player.getInventory()) {
+            Set<Integer> toRemove = new HashSet<>();
+        for(int i = 0; i < player.getInventory().getSize(); i ++){
+            ItemStack itemStack = player.getInventory().getItem(i);
             if (itemStack != null && itemStack.getType() != null && materials.containsKey(itemStack.getType())) {
                 int amount = materials.get(itemStack.getType());
                 System.out.println(amount);
@@ -131,14 +132,14 @@ public class BuyableItem extends MenuItem {
                     itemStack.setAmount(itemStack.getAmount() - amount);
                     break;
                 } else if (itemStack.getAmount() == amount) {
-                    toRemove.add(itemStack);
+                    toRemove.add(i);
                     break;
                 } else {
                     materials.put(itemStack.getType(), amount - itemStack.getAmount());
-                    toRemove.add(itemStack);
+                    toRemove.add(i);
                 }
             }
         }
-        toRemove.forEach(is -> player.getInventory().remove(is));
+        toRemove.forEach(slot -> player.getInventory().clear(slot));
     }
 }
