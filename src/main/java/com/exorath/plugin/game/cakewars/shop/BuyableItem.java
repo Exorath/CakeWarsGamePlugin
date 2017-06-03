@@ -120,11 +120,13 @@ public class BuyableItem extends MenuItem {
                 materials.put(spawnerType.getMaterial(), materials.get(spawnerType.getMaterial()) + integer);
             else
                 materials.put(spawnerType.getMaterial(), integer);
+            System.out.println(spawnerType.getMaterial().toString() + ": " + integer);
         });
-         Set<ItemStack> toRemove = new HashSet<>();
+        Set<ItemStack> toRemove = new HashSet<>();
         for (ItemStack itemStack : player.getInventory()) {
-            if (materials.containsKey(itemStack.getType())) {
+            if (itemStack != null && itemStack.getType() != null && materials.containsKey(itemStack.getType())) {
                 int amount = materials.get(itemStack.getType());
+                System.out.println(amount);
                 if (itemStack.getAmount() > amount) {
                     itemStack.setAmount(itemStack.getAmount() - amount);
                     break;
@@ -138,6 +140,5 @@ public class BuyableItem extends MenuItem {
             }
         }
         toRemove.forEach(is -> player.getInventory().remove(is));
-
     }
 }
