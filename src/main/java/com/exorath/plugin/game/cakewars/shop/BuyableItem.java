@@ -54,7 +54,7 @@ public class BuyableItem extends MenuItem {
         List<String> lore = baseLore == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(baseLore));
 
         for (Map.Entry<SpawnerType, Integer> entry : costsPerSpawnerType.entrySet())
-            lore.add("Cost: " + ChatColor.WHITE + entry.getValue() + " " + entry.getKey());
+            lore.add("Cost: " + ChatColor.WHITE + entry.getValue() + " " + entry.getKey().getName());
         return lore.toArray(new String[lore.size()]);
     }
 
