@@ -76,7 +76,7 @@ public class KitsManager implements ListeningManager {
     @EventHandler
     public void onPlayerStateChange(PlayerStateChangeEvent event) {
         if (event.getNewState() == PlayerState.PLAYING) {
-            if (BaseGameAPI.getInstance().getStateManager().getState() == State.STARTED || BaseGameAPI.getInstance().getStateManager().getState() == State.INITIALIZING)
+            if (BaseGameAPI.getInstance().getStateManager().getState() == State.STARTED)
                 updatePlayer(event.getPlayer());
         }
     }

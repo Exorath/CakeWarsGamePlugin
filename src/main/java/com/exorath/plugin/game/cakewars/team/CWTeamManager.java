@@ -60,7 +60,7 @@ public class CWTeamManager implements ListeningManager {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onStateChange(StateChangeEvent event) {
-        if (event.getNewState() == State.INITIALIZING)
+        if (event.getNewState() == State.STARTED )
             teamAPI.getTeams().stream().map(team -> (CWTeam) team)
                     .filter(cwTeam -> cwTeam.getPlayers().size() > 0)
                     .forEach(cwTeam -> cwTeam.setPlaying(true));
