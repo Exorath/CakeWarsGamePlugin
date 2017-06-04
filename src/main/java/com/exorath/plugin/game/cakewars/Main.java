@@ -24,6 +24,7 @@ import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.game.cakewars.cake.CakeManager;
 import com.exorath.plugin.game.cakewars.config.ConfigProvider;
 import com.exorath.plugin.game.cakewars.config.FileConfigProvider;
+import com.exorath.plugin.game.cakewars.finish.FinishManager;
 import com.exorath.plugin.game.cakewars.kits.KitsManager;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import com.exorath.plugin.game.cakewars.protection.LobbyProtectionManager;
@@ -72,6 +73,7 @@ public class Main extends JavaPlugin{
         baseGameAPI.addManager(new RewardManager(new CurrencyServiceAPI(getCurrencyServiceAddress())));
         baseGameAPI.addManager(new LobbyProtectionManager());
         baseGameAPI.addManager(new CakeManager(baseGameAPI.getTeamAPI()));
+        baseGameAPI.addManager(new FinishManager());
 
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }

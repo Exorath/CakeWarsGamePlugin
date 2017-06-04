@@ -22,6 +22,8 @@ import com.exorath.exoteams.player.TeamPlayer;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.lib.LocationSerialization;
 import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.basegame.state.State;
+import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
@@ -29,6 +31,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -50,6 +53,13 @@ public class CWTeamManager implements ListeningManager {
             BaseGameAPI.getInstance().getManager(PlayerManager.class);
     }
 
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onStateChange(StateChangeEvent event){
+        if(event.getNewState() == State.INITIALIZING)
+            teamAPI.getTeams().stream().map(team -> (CWTeam) team)
+                    .filter(cwTeam -> cwTeam.getPlayers().size() > 0)
+                    .forEach(cwTeam -> cwTeam.setPlaying(true));
+    }
     @EventHandler
     public void onLeave(PlayerQuitEvent event){
         teamAPI.onPlayerLeave(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));

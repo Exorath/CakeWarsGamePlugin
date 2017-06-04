@@ -17,14 +17,22 @@
 package com.exorath.plugin.game.cakewars.team;
 
 import com.exorath.exoteams.Team;
+import com.exorath.exoteams.player.TeamPlayer;
+import com.exorath.plugin.basegame.BaseGameAPI;
+import com.exorath.plugin.basegame.team.TeamManager;
+import com.exorath.plugin.game.cakewars.players.CWPlayer;
+import com.exorath.plugin.game.cakewars.players.PlayerManager;
+import com.exorath.plugin.game.cakewars.players.PlayerState;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * Created by toonsev on 3/15/2017.
  */
 public class CWTeam extends Team {
     private boolean eggAlive = true;
-    private boolean playing = true;
+    private boolean playing = false;
     private String name;
     private Location spawnLocation;
     private Location cakeLocation;
@@ -39,11 +47,23 @@ public class CWTeam extends Team {
     }
 
     public void setPlaying(boolean playing) {
+        if (this.playing == playing)
+            return;
         this.playing = playing;
+        Bukkit.getPluginManager().callEvent(new TeamPlayingChangeEvent(this, playing));
     }
 
     public boolean isPlaying() {
         return playing;
+    }
+
+    public boolean shouldLose() {
+        for (TeamPlayer teamPlayer : getPlayers()) {
+            CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer));
+            if (cwPlayer.getPlayer().isOnline() && cwPlayer.getState() != PlayerState.SPECTATOR)
+                return false;
+        }
+        return true;
     }
 
     public void setEggAlive(boolean eggAlive) {

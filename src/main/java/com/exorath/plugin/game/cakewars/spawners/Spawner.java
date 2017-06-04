@@ -30,8 +30,10 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +56,6 @@ public class Spawner {
         this.location = location;
         this.type = type;
         if (showHolo) {
-            System.out.println("Holo is loading.");
             this.hologram = new HologramLocation(location.clone().add(0, 1.5d, 0));
             addTypeLineToHologram();
         }
@@ -91,6 +92,10 @@ public class Spawner {
         return location;
     }
 
+    private void spawnItem(Location location){
+        Item item = location.getWorld().dropItem(location, new ItemStack(type.getMaterial()));
+        item.setVelocity(new Vector());
+    }
 
     private class QuickDropper extends BukkitRunnable {
         @Override
@@ -100,7 +105,7 @@ public class Spawner {
             if (BaseGameAPI.getInstance().getStateManager().getState() != State.STARTED)
                 return;
             if (location.getWorld() != null) {
-                location.getWorld().dropItem(location, new SpawnerItemStack(type.getMaterial()));
+                spawnItem(location);
             } else
                 System.out.println("Spawner: no world found");
         }
@@ -124,8 +129,7 @@ public class Spawner {
                 return;
             if (remaining <= 0) {
                 if (location.getWorld() != null) {
-                    System.out.println("dropping");
-                    location.getWorld().dropItem(location, new ItemStack(type.getMaterial()));
+                    spawnItem(location);
                 } else
                     System.out.println("Spawner: no world found");
                 if (!subject.hasComplete() && showHolo)
