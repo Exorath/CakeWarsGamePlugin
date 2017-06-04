@@ -55,7 +55,9 @@ public class CWTeamManager implements ListeningManager {
     public void onJoin(PlayerJoinEvent event) {
         Team team = teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
         if (team != null)
-            BaseGameAPI.getInstance().getManager(PlayerManager.class);
+            BaseGameAPI.getInstance().getManager(PlayerManager.class);//todo fix this line
+        else
+            event.getPlayer().sendMessage("Failed to find team..");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
