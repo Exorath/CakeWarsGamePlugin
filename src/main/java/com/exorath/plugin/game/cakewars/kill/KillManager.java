@@ -66,16 +66,4 @@ public class KillManager implements ListeningManager {
         if (killStreaks.get(player) >= 2)
             Bukkit.getPluginManager().callEvent(new KillStreakEvent(player, killStreaks.get(player)));
     }
-
-    private void respawn(Player player) {
-        CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(player);
-        if(cwPlayer == null || cwPlayer.getTeam() == null || !cwPlayer.getTeam().isEggAlive()){
-            cwPlayer.setState(PlayerState.SPECTATOR);
-            player.spigot().respawn();
-            return;
-        }
-        player.spigot().respawn();
-    }
-
-
 }

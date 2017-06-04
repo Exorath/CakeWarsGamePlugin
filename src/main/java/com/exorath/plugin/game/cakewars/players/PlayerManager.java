@@ -84,7 +84,7 @@ public class PlayerManager implements ListeningManager {
         CWPlayer cwPlayer = getPlayer(event.getEntity());
         event.getEntity().setGameMode(GameMode.SPECTATOR);
         event.getEntity().spigot().respawn();
-        if (cwPlayer == null || cwPlayer.getTeam() == null || !cwPlayer.getTeam().isEggAlive())
+        if (cwPlayer.getTeam() == null || !cwPlayer.getTeam().isEggAlive())
             cwPlayer.setState(PlayerState.SPECTATOR);
         else if (cwPlayer.getState() == PlayerState.PLAYING) {
             cwPlayer.setState(PlayerState.RESPAWNING);
