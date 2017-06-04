@@ -33,6 +33,7 @@ public class CWPlayer {
     }
 
     public void setTeam(CWTeam team) {
+        System.out.println("Set player team: " + team);
         this.team = team;
     }
 
