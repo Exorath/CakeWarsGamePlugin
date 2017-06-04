@@ -54,12 +54,11 @@ public class FinishManager implements ListeningManager {
             team.setPlaying(false);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerLeave(PlayerQuitEvent event) {
         CWPlayer cwPlayer = getPlayer(event.getPlayer());
         if (cwPlayer.getTeam().isPlaying() && cwPlayer.getTeam().shouldLose())
             cwPlayer.getTeam().setPlaying(false);
-
     }
 
 

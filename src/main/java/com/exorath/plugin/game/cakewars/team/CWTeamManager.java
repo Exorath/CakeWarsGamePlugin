@@ -51,7 +51,7 @@ public class CWTeamManager implements ListeningManager {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
         Team team = teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
         if (team != null)
@@ -66,7 +66,7 @@ public class CWTeamManager implements ListeningManager {
                     .forEach(cwTeam -> cwTeam.setPlaying(true));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onLeave(PlayerQuitEvent event) {
         teamAPI.onPlayerLeave(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
     }
