@@ -19,6 +19,10 @@ package com.exorath.plugin.game.cakewars.team;
 import com.exorath.exoteams.Team;
 import com.exorath.exoteams.TeamAPI;
 import com.exorath.exoteams.player.TeamPlayer;
+import com.exorath.exoteams.player.TeamPlayerJoinTeamEvent;
+import com.exorath.exoteams.player.TeamPlayerLeaveTeamEvent;
+import com.exorath.exoteams.startRule.GlobalStartRule;
+import com.exorath.exoteams.startRule.MinPlayersStartRule;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.lib.LocationSerialization;
 import com.exorath.plugin.basegame.manager.ListeningManager;
@@ -44,26 +48,29 @@ public class CWTeamManager implements ListeningManager {
     public CWTeamManager(TeamAPI teamAPI, ConfigurationSection teamsSection) {
         this.teamAPI = teamAPI;
         loadTeams(teamsSection);
+
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event){
+    public void onJoin(PlayerJoinEvent event) {
         Team team = teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
-        if(team != null)
+        if (team != null)
             BaseGameAPI.getInstance().getManager(PlayerManager.class);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onStateChange(StateChangeEvent event){
-        if(event.getNewState() == State.INITIALIZING)
+    public void onStateChange(StateChangeEvent event) {
+        if (event.getNewState() == State.INITIALIZING)
             teamAPI.getTeams().stream().map(team -> (CWTeam) team)
                     .filter(cwTeam -> cwTeam.getPlayers().size() > 0)
                     .forEach(cwTeam -> cwTeam.setPlaying(true));
     }
+
     @EventHandler
-    public void onLeave(PlayerQuitEvent event){
+    public void onLeave(PlayerQuitEvent event) {
         teamAPI.onPlayerLeave(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
     }
+
     private void loadTeams(ConfigurationSection teamsSection) {
         if (teamsSection == null)
             Main.terminate("No teams configuration");
@@ -82,11 +89,14 @@ public class CWTeamManager implements ListeningManager {
             Main.terminate("No primaryShopLocation in team map section");
         World world = Main.getInstance().getMapsManager().getGameMap().getWorld();
         int maxPlayers = teamSection.contains("maxPlayers") ? teamSection.getInt("maxPlayers") : 0;
-        teamAPI.addTeam(new CWTeam(
-                ChatColor.translateAlternateColorCodes('&',teamSection.getString("name")),
+        CWTeam team = new CWTeam(
+                ChatColor.translateAlternateColorCodes('&', teamSection.getString("name")),
                 LocationSerialization.getLocation(world, teamSection.getConfigurationSection("cakeLocation")),
                 LocationSerialization.getLocation(world, teamSection.getConfigurationSection("spawnLocation")),
                 LocationSerialization.getLocation(world, teamSection.getConfigurationSection("primaryShopLocation")),
-                maxPlayers));
+                maxPlayers);
+        if (teamSection.contains("minPlayers"))
+            team.addStartRule(new MinPlayersStartRule(teamSection.getInt("minPlayers")));
+        teamAPI.addTeam(team);
     }
 }

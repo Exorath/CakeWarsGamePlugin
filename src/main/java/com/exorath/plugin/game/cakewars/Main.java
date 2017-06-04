@@ -16,6 +16,8 @@
 
 package com.exorath.plugin.game.cakewars;
 
+import com.exorath.exoteams.startRule.GlobalMinPlayersStartRule;
+import com.exorath.exoteams.startRule.MinPlayersStartRule;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.clickableEntities.ClickableEntitiesManager;
 import com.exorath.plugin.basegame.flavor.FlavorManager;
@@ -46,11 +48,12 @@ import java.io.FileNotFoundException;
 /**
  * Created by toonsev on 3/15/2017.
  */
-public class Main extends JavaPlugin{
+public class Main extends JavaPlugin {
     public static final String CRUMBS_CURRENCY = "Crumbs";
     private static Main instance;
     private BaseGameAPI baseGameAPI;
     private ConfigProvider configProvider;
+
     @Override
     public void onEnable() {
         Main.instance = this;
@@ -63,9 +66,10 @@ public class Main extends JavaPlugin{
         String flavor = baseGameAPI.getManager(FlavorManager.class).getFlavor();
         ConfigurationSection flavorSection = getConfig().getConfigurationSection("flavors." + flavor);
         FileConfiguration mapConfig = baseGameAPI.getMapsManager().getGameMap().getConfiguration();
+        ConfigurationSection mapFlavorSection = mapConfig.getConfigurationSection("flavors." + flavor);
 
-        baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), mapConfig.getConfigurationSection("teams")));
-        baseGameAPI.addManager(new SpawnersManager(mapConfig.getConfigurationSection("spawners"), flavorSection.getConfigurationSection("spawnerTypes")));
+        baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), mapFlavorSection.getConfigurationSection("teams")));
+        baseGameAPI.addManager(new SpawnersManager(mapFlavorSection.getConfigurationSection("spawners"), flavorSection.getConfigurationSection("spawnerTypes")));
         baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
         baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
         baseGameAPI.addManager(new KitsManager(new KitServiceAPI(getKitServiceAddress()), configProvider.getKitPackageJson()));
@@ -75,18 +79,22 @@ public class Main extends JavaPlugin{
         baseGameAPI.addManager(new CakeManager(baseGameAPI.getTeamAPI()));
         baseGameAPI.addManager(new FinishManager());
 
+        if (mapFlavorSection.contains("minPlayers"))
+            baseGameAPI.getTeamAPI().addStartRule(new GlobalMinPlayersStartRule(mapFlavorSection.getInt("minPlayers")));
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 
-    public static Main getInstance(){
+    public static Main getInstance() {
         return instance;
     }
+
     public static void terminate() {
         System.out.println("1v1Plugin is terminating...");
         Bukkit.shutdown();
         System.out.println("Termination failed, force exiting system...");
         System.exit(1);
     }
+
     public static void terminate(String message) {
         System.out.println(message);
         System.out.println("1v1Plugin is terminating...");
@@ -94,6 +102,7 @@ public class Main extends JavaPlugin{
         System.out.println("Termination failed, force exiting system...");
         System.exit(1);
     }
+
     private String getKitServiceAddress() {
         String address = System.getenv("KIT_SERVICE_ADDRESS");
         if (address == null)
@@ -107,7 +116,8 @@ public class Main extends JavaPlugin{
             Main.terminate("No CURRENCY_SERVICE_ADDRESS env found.");
         return address;
     }
-    public MapsManager getMapsManager(){
+
+    public MapsManager getMapsManager() {
         return baseGameAPI.getMapsManager();
     }
 }
