@@ -80,7 +80,7 @@ public class Main extends JavaPlugin {
         baseGameAPI.addManager(new FinishManager());
 
         if (mapFlavorSection.contains("minPlayers"))
-            baseGameAPI.getTeamAPI().addStartRule(new GlobalMinPlayersStartRule(mapFlavorSection.getInt("minPlayers")));
+            baseGameAPI.getTeamAPI().addStartRule(new GlobalMinPlayersStartRule(baseGameAPI.getTeamAPI(), mapFlavorSection.getInt("minPlayers")));
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
     }
 
