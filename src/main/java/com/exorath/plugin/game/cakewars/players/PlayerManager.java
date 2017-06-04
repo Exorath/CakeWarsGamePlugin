@@ -16,8 +16,6 @@
 
 package com.exorath.plugin.game.cakewars.players;
 
-import com.exorath.exoteams.TeamAPI;
-import com.exorath.exoteams.player.TeamPlayer;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
@@ -74,8 +72,10 @@ public class PlayerManager implements ListeningManager {
 
     public CWPlayer getPlayer(Player player) {
         CWPlayer cwPlayer = players.get(player);
-        if (cwPlayer == null)
+        if (cwPlayer == null) {
+            cwPlayer = new CWPlayer(player);
             players.put(player, cwPlayer);
+        }
         return cwPlayer;
     }
 
