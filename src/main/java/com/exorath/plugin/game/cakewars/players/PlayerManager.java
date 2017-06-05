@@ -53,8 +53,7 @@ public class PlayerManager implements ListeningManager {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
-        players.put(event.getPlayer(), new CWPlayer(event.getPlayer()));
-
+        getPlayer(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -70,9 +69,10 @@ public class PlayerManager implements ListeningManager {
         }
     }
 
-    public CWPlayer getPlayer(Player player) {
+    public synchronized CWPlayer getPlayer(Player player) {
         CWPlayer cwPlayer = players.get(player);
         if (cwPlayer == null) {
+            System.out.println("Created new player instance");
             cwPlayer = new CWPlayer(player);
             players.put(player, cwPlayer);
         }
@@ -104,7 +104,7 @@ public class PlayerManager implements ListeningManager {
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
-            CWPlayer cwPlayer = players.get(event.getEntity());
+            CWPlayer cwPlayer = getPlayer((Player) event.getEntity());
             if (cwPlayer != null && cwPlayer.getState() != PlayerState.PLAYING)
                 event.setCancelled(true);
         }
@@ -112,9 +112,10 @@ public class PlayerManager implements ListeningManager {
 
     @EventHandler
     public void respawnEvent(PlayerRespawnEvent event) {
-        CWPlayer cwPlayer = players.get(event.getPlayer());
+        CWPlayer cwPlayer = getPlayer(event.getPlayer());
         Location location = event.getPlayer().getLocation();
-        if (location.getY() < -60)
+        System.out.println("Respawning player with team: " + cwPlayer.getTeam());
+        if (location.getY() < -60 && cwPlayer.getTeam() != null)
             location = cwPlayer.getTeam().getSpawnLocation();
         if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING)
             event.getPlayer().sendMessage(ChatColor.GRAY + "You " + ChatColor.RED + "died" + ChatColor.GRAY + ". Respawning in " + ChatColor.RED + RESPAWN_SECONDS + " seconds" + ChatColor.GRAY + ".");
