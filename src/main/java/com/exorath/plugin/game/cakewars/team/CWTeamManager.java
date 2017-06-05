@@ -55,14 +55,14 @@ public class CWTeamManager implements ListeningManager {
     public void onJoin(PlayerJoinEvent event) {
         Team team = teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
         if (team != null)
-            BaseGameAPI.getInstance().getManager(PlayerManager.class);//todo fix this line
+            BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(event.getPlayer()).setTeam((CWTeam) team);
         else
             event.getPlayer().sendMessage("Failed to find team..");
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onStateChange(StateChangeEvent event) {
-        if (event.getNewState() == State.STARTED )
+        if (event.getNewState() == State.STARTED)
             teamAPI.getTeams().stream().map(team -> (CWTeam) team)
                     .filter(cwTeam -> cwTeam.getPlayers().size() > 0)
                     .forEach(cwTeam -> cwTeam.setPlaying(true));
