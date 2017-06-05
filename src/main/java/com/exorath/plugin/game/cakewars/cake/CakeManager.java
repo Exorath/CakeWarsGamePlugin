@@ -93,13 +93,7 @@ public class CakeManager implements ListeningManager {
             event.setCancelled(true);
     }
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        event.getBlock().setMetadata("byPlayer", new FixedMetadataValue(Main.getInstance(), true));
-    }
-
-
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         teamByCake.forEach((block, team) -> {
             if (block.getLocation().equals(event.getBlock().getLocation()))
@@ -110,12 +104,7 @@ public class CakeManager implements ListeningManager {
             handleCakeBreak(event);
             return;
         }
-        System.out.println("Destroyed");
         //TODO MOVE THIS
-        if (event.getBlock().hasMetadata("byPlayer"))
-            event.setCancelled(false);
-        else
-            event.setCancelled(true);
     }
 
 
@@ -127,7 +116,6 @@ public class CakeManager implements ListeningManager {
             return;
         }
         CWTeam blockTeam = teamByCake.get(event.getBlock());
-        System.out.println("Cake team: " + blockTeam);
         if (blockTeam != null && !blockTeam.equals(cwPlayer.getTeam()) && blockTeam.isEggAlive()) {
             blockTeam.setEggAlive(false);
             Bukkit.getPluginManager().callEvent(new CakeBreakEvent(cwPlayer, cwPlayer.getTeam(), event.getBlock()));
@@ -135,7 +123,8 @@ public class CakeManager implements ListeningManager {
             blockTeam.getPlayers().forEach(teamPlayer -> TeamManager.getPlayer(teamPlayer).sendMessage(ChatColor.RED + "Your egg has been destroyed, you will no longer respawn."));
             event.setCancelled(false);
             hologramsByTeam.get(blockTeam).addText(ChatColorText.markup(PlainText.plain("Destroyed")).color(ChatColor.RED), DisplayProperties.create(-10, NeverRemover.never()));
-        }
+        }else
+            event.setCancelled(true);
     }
 
 }

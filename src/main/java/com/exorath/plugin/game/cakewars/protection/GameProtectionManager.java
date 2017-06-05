@@ -18,12 +18,16 @@ package com.exorath.plugin.game.cakewars.protection;
 
 import com.exorath.exoProtection.ProtectionListener;
 import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.players.CWPlayer;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
 /**
  * Created by toonsev on 6/2/2017.
@@ -36,6 +40,19 @@ public class GameProtectionManager extends ProtectionListener implements Listeni
         this.playerManager = playerManager;
     }
 
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        event.getBlock().setMetadata("byPlayer", new FixedMetadataValue(Main.getInstance(), true));
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getBlock().hasMetadata("byPlayer"))
+            event.setCancelled(false);
+        else
+            event.setCancelled(true);
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDmgEntity(EntityDamageByEntityEvent event) {
