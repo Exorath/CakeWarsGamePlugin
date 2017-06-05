@@ -39,6 +39,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -88,7 +89,7 @@ public class CakeManager implements ListeningManager {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() != null && event.getClickedBlock().hasMetadata("cake"))
+        if (event.getClickedBlock() != null && event.getAction() != Action.LEFT_CLICK_BLOCK && event.getClickedBlock().hasMetadata("cake"))
             event.setCancelled(true);
     }
 
