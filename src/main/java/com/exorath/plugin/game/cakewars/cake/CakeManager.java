@@ -40,6 +40,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -79,6 +80,13 @@ public class CakeManager implements ListeningManager {
     }
 
     @EventHandler
+    public void onPhysicsEvent(BlockPhysicsEvent event) {
+        if (teamByCake.containsKey(event.getBlock())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() != null && event.getClickedBlock().hasMetadata("cake"))
             event.setCancelled(true);
@@ -92,11 +100,16 @@ public class CakeManager implements ListeningManager {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
+        teamByCake.forEach((block, team) -> {
+            if (block.getLocation().equals(event.getBlock().getLocation()))
+                System.out.println("Cake matches location");
+        });
         if (teamByCake.containsKey(event.getBlock())) {
             System.out.println("cake has metadata");
             handleCakeBreak(event);
             return;
         }
+        System.out.println("Destroyed");
         //TODO MOVE THIS
         if (event.getBlock().hasMetadata("byPlayer"))
             event.setCancelled(false);
