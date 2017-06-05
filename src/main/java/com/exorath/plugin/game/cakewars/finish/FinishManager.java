@@ -57,7 +57,7 @@ public class FinishManager implements ListeningManager {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerLeave(PlayerQuitEvent event) {
         CWPlayer cwPlayer = getPlayer(event.getPlayer());
-
+        System.out.println("Player left, team: " + cwPlayer.getTeam());
         if (cwPlayer.getTeam() != null && cwPlayer.getTeam().isPlaying() && cwPlayer.getTeam().shouldLose())
             cwPlayer.getTeam().setPlaying(false);
     }
@@ -81,7 +81,7 @@ public class FinishManager implements ListeningManager {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerDieEvent(PlayerDeathEvent event) {
         CWPlayer cwPlayer = getPlayer(event.getEntity());
-        if(cwPlayer.getTeam() == null){
+        if (cwPlayer.getTeam() == null) {
             System.out.println("Player team is null?");
             return;
         }

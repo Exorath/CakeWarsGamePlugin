@@ -17,7 +17,6 @@
 package com.exorath.plugin.game.cakewars;
 
 import com.exorath.exoteams.startRule.GlobalMinPlayersStartRule;
-import com.exorath.exoteams.startRule.MinPlayersStartRule;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.clickableEntities.ClickableEntitiesManager;
 import com.exorath.plugin.basegame.flavor.FlavorManager;
@@ -29,7 +28,7 @@ import com.exorath.plugin.game.cakewars.config.FileConfigProvider;
 import com.exorath.plugin.game.cakewars.finish.FinishManager;
 import com.exorath.plugin.game.cakewars.kits.KitsManager;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
-import com.exorath.plugin.game.cakewars.protection.LobbyProtectionManager;
+import com.exorath.plugin.game.cakewars.protection.GameProtectionManager;
 import com.exorath.plugin.game.cakewars.rewards.RewardManager;
 import com.exorath.plugin.game.cakewars.shop.ShopManager;
 import com.exorath.plugin.game.cakewars.spawners.SpawnersManager;
@@ -75,7 +74,7 @@ public class Main extends JavaPlugin {
         baseGameAPI.addManager(new KitsManager(new KitServiceAPI(getKitServiceAddress()), configProvider.getKitPackageJson()));
         baseGameAPI.addManager(new PlayerManager());
         baseGameAPI.addManager(new RewardManager(new CurrencyServiceAPI(getCurrencyServiceAddress())));
-        baseGameAPI.addManager(new LobbyProtectionManager());
+        baseGameAPI.addManager(new GameProtectionManager(baseGameAPI.getManager(PlayerManager.class)));
         baseGameAPI.addManager(new CakeManager(baseGameAPI.getTeamAPI()));
         baseGameAPI.addManager(new FinishManager());
 

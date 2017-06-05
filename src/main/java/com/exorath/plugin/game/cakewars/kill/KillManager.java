@@ -16,13 +16,8 @@
 
 package com.exorath.plugin.game.cakewars.kill;
 
-import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.manager.ListeningManager;
-import com.exorath.plugin.game.cakewars.players.CWPlayer;
-import com.exorath.plugin.game.cakewars.players.PlayerManager;
-import com.exorath.plugin.game.cakewars.players.PlayerState;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +33,7 @@ public class KillManager implements ListeningManager {
     private HashMap<Player, Player> lastDamagerMap = new HashMap<>();
     private HashMap<Player, Integer> killStreaks = new HashMap<>();
 
-    @EventHandler
+
     public void onEntityDamageEntityEvent(EntityDamageByEntityEvent event) {
         if (event.getDamager().getType() != EntityType.PLAYER && event.getEntity().getType() != EntityType.PLAYER)
             return;

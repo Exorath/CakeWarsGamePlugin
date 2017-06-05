@@ -106,10 +106,12 @@ public class CakeManager implements ListeningManager {
     private void handleCakeBreak(BlockBreakEvent event) {
         CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(event.getPlayer());
         if (cwPlayer == null || cwPlayer.getTeam() == null) {
+            System.out.println("Breaker does not have a team");
             event.setCancelled(true);
             return;
         }
         CWTeam blockTeam = teamByCake.get(event.getBlock());
+        System.out.println("Cake team: " + blockTeam);
         if (blockTeam != null && !blockTeam.equals(cwPlayer.getTeam()) && blockTeam.isEggAlive()) {
             blockTeam.setEggAlive(false);
             Bukkit.getPluginManager().callEvent(new CakeBreakEvent(cwPlayer, cwPlayer.getTeam(), event.getBlock()));

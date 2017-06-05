@@ -18,11 +18,12 @@ package com.exorath.plugin.game.cakewars.protection;
 
 import com.exorath.exoProtection.config.ProtectionConfiguration;
 import org.bukkit.GameMode;
+import org.bukkit.event.EventHandler;
 
 /**
  * Created by toonsev on 5/27/2017.
  */
-public class LobbyProtectionConfiguration implements ProtectionConfiguration {
+public class GameProtectionConfiguration implements ProtectionConfiguration {
     @Override
     public boolean canBlockBurn() {
         return false;
