@@ -69,11 +69,11 @@ public class CakeManager implements ListeningManager {
     public void onStateChange(StateChangeEvent event) {
         if (event.getNewState() == State.STARTED) {
             teamByCake.forEach((block, team) -> {
-                block.setType(Material.CAKE_BLOCK);
+                block.setType(Material.CAKE_BLOCK, false);
                 block.setMetadata("cake", new FixedMetadataValue(Main.getInstance(), true));
                 hologramsByTeam.put(team, new HologramLocation(block.getLocation().clone().add(0.5d, 1.5d, 0.5d)));
                 hologramsByTeam.get(team).addText(new PlainText(team.getName() + "'s"), DisplayProperties.create(0, NeverRemover.never()));
-                hologramsByTeam.get(team).addText(ChatColorText.markup(new PlainText(team.getName() + "Egg")).color(ChatColor.GRAY), DisplayProperties.create(-1, NeverRemover.never()));
+                hologramsByTeam.get(team).addText(ChatColorText.markup(new PlainText("Egg")).color(ChatColor.GRAY), DisplayProperties.create(-1, NeverRemover.never()));
             });
         }
     }
@@ -92,10 +92,12 @@ public class CakeManager implements ListeningManager {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.getBlock().hasMetadata("cake")) {
+        if (teamByCake.containsKey(event.getBlock())) {
+            System.out.println("cake has metadata");
             handleCakeBreak(event);
             return;
         }
+        //TODO MOVE THIS
         if (event.getBlock().hasMetadata("byPlayer"))
             event.setCancelled(false);
         else

@@ -49,6 +49,7 @@ public class CWTeam extends Team {
     public void setPlaying(boolean playing) {
         if (this.playing == playing)
             return;
+        System.out.println(this + " is now playing.");
         this.playing = playing;
         Bukkit.getPluginManager().callEvent(new TeamPlayingChangeEvent(this, playing));
     }
@@ -65,7 +66,14 @@ public class CWTeam extends Team {
         }
         return true;
     }
-
+    public boolean shouldLose(Player player) {
+        for (TeamPlayer teamPlayer : getPlayers()) {
+            CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer));
+            if (cwPlayer.getPlayer() != player && cwPlayer.getPlayer().isOnline() && cwPlayer.getState() != PlayerState.SPECTATOR)
+                return false;
+        }
+        return true;
+    }
     public void setEggAlive(boolean eggAlive) {
         this.eggAlive = eggAlive;
     }

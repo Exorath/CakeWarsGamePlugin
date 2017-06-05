@@ -58,8 +58,10 @@ public class FinishManager implements ListeningManager {
     public void onPlayerLeave(PlayerQuitEvent event) {
         CWPlayer cwPlayer = getPlayer(event.getPlayer());
         System.out.println("Player left, team: " + cwPlayer.getTeam());
-        if (cwPlayer.getTeam() != null && cwPlayer.getTeam().isPlaying() && cwPlayer.getTeam().shouldLose())
+        System.out.println("player online: " + event.getPlayer().isOnline());
+        if (cwPlayer.getTeam() != null && cwPlayer.getTeam().isPlaying() && cwPlayer.getTeam().shouldLose(event.getPlayer()))
             cwPlayer.getTeam().setPlaying(false);
+
     }
 
 
