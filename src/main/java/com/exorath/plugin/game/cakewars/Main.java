@@ -17,6 +17,7 @@
 package com.exorath.plugin.game.cakewars;
 
 import com.exorath.exoteams.startRule.GlobalMinPlayersStartRule;
+import com.exorath.plugin.base.ExoBaseAPI;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.basegame.clickableEntities.ClickableEntitiesManager;
 import com.exorath.plugin.basegame.flavor.FlavorManager;
@@ -51,12 +52,14 @@ public class Main extends JavaPlugin {
     public static final String CRUMBS_CURRENCY = "Crumbs";
     private static Main instance;
     private BaseGameAPI baseGameAPI;
+    private ExoBaseAPI exoBaseAPI;
     private ConfigProvider configProvider;
 
     @Override
     public void onEnable() {
         Main.instance = this;
         this.baseGameAPI = BaseGameAPI.getInstance();
+        this.exoBaseAPI = ExoBaseAPI.getInstance();
         try {
             this.configProvider = new FileConfigProvider(new File(getDataFolder(), "config.json"));
         } catch (FileNotFoundException e) {
@@ -66,17 +69,17 @@ public class Main extends JavaPlugin {
         ConfigurationSection flavorSection = getConfig().getConfigurationSection("flavors." + flavor);
         FileConfiguration mapConfig = baseGameAPI.getMapsManager().getGameMap().getConfiguration();
         ConfigurationSection mapFlavorSection = mapConfig.getConfigurationSection("flavors." + flavor);
+        exoBaseAPI.registerManager(new PlayerManager());
+        exoBaseAPI.registerManager(new CWTeamManager(baseGameAPI.getTeamAPI(), exoBaseAPI.getManager(PlayerManager.class), mapFlavorSection.getConfigurationSection("teams")));
+        exoBaseAPI.registerManager(new SpawnersManager(mapFlavorSection.getConfigurationSection("spawners"), flavorSection.getConfigurationSection("spawnerTypes")));
+        exoBaseAPI.registerManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
+        exoBaseAPI.registerManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
+        exoBaseAPI.registerManager(new KitsManager(new KitServiceAPI(getKitServiceAddress()), configProvider.getKitPackageJson()));
 
-        baseGameAPI.addManager(new CWTeamManager(baseGameAPI.getTeamAPI(), mapFlavorSection.getConfigurationSection("teams")));
-        baseGameAPI.addManager(new SpawnersManager(mapFlavorSection.getConfigurationSection("spawners"), flavorSection.getConfigurationSection("spawnerTypes")));
-        baseGameAPI.addManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
-        baseGameAPI.addManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
-        baseGameAPI.addManager(new KitsManager(new KitServiceAPI(getKitServiceAddress()), configProvider.getKitPackageJson()));
-        baseGameAPI.addManager(new PlayerManager());
-        baseGameAPI.addManager(new RewardManager(new CurrencyServiceAPI(getCurrencyServiceAddress())));
-        baseGameAPI.addManager(new GameProtectionManager(baseGameAPI.getManager(PlayerManager.class)));
-        baseGameAPI.addManager(new CakeManager(baseGameAPI.getTeamAPI()));
-        baseGameAPI.addManager(new FinishManager());
+        exoBaseAPI.registerManager(new RewardManager(new CurrencyServiceAPI(getCurrencyServiceAddress())));
+        exoBaseAPI.registerManager(new GameProtectionManager(exoBaseAPI.getManager(PlayerManager.class)));
+        exoBaseAPI.registerManager(new CakeManager(baseGameAPI.getTeamAPI()));
+        exoBaseAPI.registerManager(new FinishManager());
 
         if (mapFlavorSection.contains("minPlayers"))
             baseGameAPI.getTeamAPI().addStartRule(new GlobalMinPlayersStartRule(baseGameAPI.getTeamAPI(), mapFlavorSection.getInt("minPlayers")));

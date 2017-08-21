@@ -18,14 +18,9 @@ package com.exorath.plugin.game.cakewars.team;
 
 import com.exorath.exoteams.Team;
 import com.exorath.exoteams.TeamAPI;
-import com.exorath.exoteams.player.TeamPlayer;
-import com.exorath.exoteams.player.TeamPlayerJoinTeamEvent;
-import com.exorath.exoteams.player.TeamPlayerLeaveTeamEvent;
-import com.exorath.exoteams.startRule.GlobalStartRule;
 import com.exorath.exoteams.startRule.MinPlayersStartRule;
-import com.exorath.plugin.basegame.BaseGameAPI;
+import com.exorath.plugin.base.manager.ListeningManager;
 import com.exorath.plugin.basegame.lib.LocationSerialization;
-import com.exorath.plugin.basegame.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.basegame.team.TeamManager;
@@ -44,9 +39,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class CWTeamManager implements ListeningManager {
     private TeamAPI teamAPI;
+    private PlayerManager playerManager;
 
-    public CWTeamManager(TeamAPI teamAPI, ConfigurationSection teamsSection) {
+    public CWTeamManager(TeamAPI teamAPI, PlayerManager playerManager, ConfigurationSection teamsSection) {
         this.teamAPI = teamAPI;
+        this.playerManager = playerManager;
         loadTeams(teamsSection);
 
     }
@@ -55,7 +52,7 @@ public class CWTeamManager implements ListeningManager {
     public void onJoin(PlayerJoinEvent event) {
         Team team = teamAPI.onPlayerJoin(TeamManager.getTeamPlayer(event.getPlayer().getUniqueId().toString()));
         if (team != null)
-            BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(event.getPlayer()).setTeam((CWTeam) team);
+            playerManager.getPlayer(event.getPlayer()).setTeam((CWTeam) team);
         else
             event.getPlayer().sendMessage("Failed to find team..");
     }

@@ -16,7 +16,8 @@
 
 package com.exorath.plugin.game.cakewars.kill;
 
-import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.base.manager.ListeningManager;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -49,6 +50,7 @@ public class KillManager implements ListeningManager {
         if (!lastDamagerMap.containsKey(event.getEntity()))
             return;
         Player killer = lastDamagerMap.get(event.getEntity());
+        Bukkit.broadcastMessage(ChatColor.GRAY + event.getEntity().getName() + " killed by " + killer);
         addStreak(killer);
         Bukkit.getPluginManager().callEvent(new CWKillEvent(killer, event.getEntity(), event));
     }

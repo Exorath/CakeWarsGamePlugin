@@ -18,7 +18,6 @@ package com.exorath.plugin.game.cakewars.protection;
 
 import com.exorath.exoProtection.config.ProtectionConfiguration;
 import org.bukkit.GameMode;
-import org.bukkit.event.EventHandler;
 
 /**
  * Created by toonsev on 5/27/2017.

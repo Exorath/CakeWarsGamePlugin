@@ -17,6 +17,7 @@
 package com.exorath.plugin.game.cakewars.shop;
 
 import com.exorath.exomenus.MenuItem;
+import com.exorath.plugin.base.ExoBaseAPI;
 import com.exorath.plugin.basegame.BaseGameAPI;
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.spawners.SpawnerType;
@@ -87,7 +88,7 @@ public class BuyableItem extends MenuItem {
             Main.terminate("BuyableItem section does not contain 'slot' field");
         if (!section.containsKey("cost"))
             Main.terminate("BuyableItem section does not contain 'cost' field");
-        Map<SpawnerType, Integer> costs = loadCost((Map<String, Object>) section.get("cost"), BaseGameAPI.getInstance().getManager(SpawnersManager.class));
+        Map<SpawnerType, Integer> costs = loadCost((Map<String, Object>) section.get("cost"), ExoBaseAPI.getInstance().getManager(SpawnersManager.class));
         BuyableItem item = new BuyableItem((String) section.get("name"),
                 Material.valueOf((String) section.get("material")),
                 (Integer) section.get("amount"), costs,

@@ -17,8 +17,7 @@
 package com.exorath.plugin.game.cakewars.spawners;
 
 import com.exorath.plugin.basegame.lib.LocationSerialization;
-import com.exorath.plugin.basegame.manager.ListeningManager;
-import com.exorath.plugin.basegame.manager.Manager;
+import com.exorath.plugin.base.manager.ListeningManager;
 import com.exorath.plugin.game.cakewars.Main;
 import org.bukkit.Material;
 import org.bukkit.World;

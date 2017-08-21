@@ -83,12 +83,17 @@
         <dependency>
             <groupId>com.github.Exorath</groupId>
             <artifactId>ExoMenus</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>com.github.Exorath</groupId>
             <artifactId>KitService</artifactId>
             <version>0.0.14</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.exorath</groupId>
+            <artifactId>ExoBasePlugin</artifactId>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.Exorath</groupId>

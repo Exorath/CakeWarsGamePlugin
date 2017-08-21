@@ -32,26 +32,26 @@ public class CWPlayer {
         this.player = player;
     }
 
-    public void setTeam(CWTeam team) {
+    public synchronized void setTeam(CWTeam team) {
         System.out.println("Set player team: " + team);
         this.team = team;
     }
 
-    public CWTeam getTeam() {
+    public synchronized CWTeam getTeam() {
         return team;
     }
 
-    public void setState(PlayerState state) {
+    public synchronized void setState(PlayerState state) {
         PlayerState oldState = this.state;
         this.state = state;
         Bukkit.getPluginManager().callEvent(new PlayerStateChangeEvent(this, oldState, state));
     }
 
-    public PlayerState getState() {
+    public synchronized PlayerState getState() {
         return state;
     }
 
-    public Player getPlayer() {
+    public synchronized Player getPlayer() {
         return player;
     }
 

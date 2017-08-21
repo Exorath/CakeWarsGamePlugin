@@ -17,7 +17,7 @@
 package com.exorath.plugin.game.cakewars.protection;
 
 import com.exorath.exoProtection.ProtectionListener;
-import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.base.manager.ListeningManager;
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.players.CWPlayer;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;

@@ -18,7 +18,7 @@ package com.exorath.plugin.game.cakewars.team;
 
 import com.exorath.exoteams.Team;
 import com.exorath.exoteams.player.TeamPlayer;
-import com.exorath.plugin.basegame.BaseGameAPI;
+import com.exorath.plugin.base.ExoBaseAPI;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.players.CWPlayer;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
@@ -46,7 +46,7 @@ public class CWTeam extends Team {
         setMaxPlayers(maxPlayers);
     }
 
-    public void setPlaying(boolean playing) {
+    public synchronized void setPlaying(boolean playing) {
         if (this.playing == playing)
             return;
         System.out.println(this + " is now playing.");
@@ -54,13 +54,13 @@ public class CWTeam extends Team {
         Bukkit.getPluginManager().callEvent(new TeamPlayingChangeEvent(this, playing));
     }
 
-    public boolean isPlaying() {
+    public synchronized boolean isPlaying() {
         return playing;
     }
 
     public boolean shouldLose() {
         for (TeamPlayer teamPlayer : getPlayers()) {
-            CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer));
+            CWPlayer cwPlayer = ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer));
             if (cwPlayer.getPlayer().isOnline() && cwPlayer.getState() != PlayerState.SPECTATOR)
                 return false;
         }
@@ -68,17 +68,17 @@ public class CWTeam extends Team {
     }
     public boolean shouldLose(Player player) {
         for (TeamPlayer teamPlayer : getPlayers()) {
-            CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer));
+            CWPlayer cwPlayer = ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer));
             if (cwPlayer.getPlayer() != player && cwPlayer.getPlayer().isOnline() && cwPlayer.getState() != PlayerState.SPECTATOR)
                 return false;
         }
         return true;
     }
-    public void setEggAlive(boolean eggAlive) {
+    public synchronized void setEggAlive(boolean eggAlive) {
         this.eggAlive = eggAlive;
     }
 
-    public boolean isEggAlive() {
+    public synchronized boolean isEggAlive() {
         return eggAlive;
     }
 

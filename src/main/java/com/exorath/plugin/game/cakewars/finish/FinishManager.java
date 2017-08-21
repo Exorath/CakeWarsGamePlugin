@@ -17,8 +17,9 @@
 package com.exorath.plugin.game.cakewars.finish;
 
 import com.exorath.exoteams.Team;
+import com.exorath.plugin.base.ExoBaseAPI;
 import com.exorath.plugin.basegame.BaseGameAPI;
-import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.base.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.game.cakewars.Main;
@@ -132,6 +133,6 @@ public class FinishManager implements ListeningManager {
     }
 
     private CWPlayer getPlayer(Player player) {
-        return BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(player);
+        return ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(player);
     }
 }

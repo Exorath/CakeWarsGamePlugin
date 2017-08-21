@@ -16,8 +16,6 @@
 
 package com.exorath.plugin.game.cakewars.team;
 
-import com.exorath.plugin.game.cakewars.players.CWPlayer;
-import com.exorath.plugin.game.cakewars.players.PlayerState;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

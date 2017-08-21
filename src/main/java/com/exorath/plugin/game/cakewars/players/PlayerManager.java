@@ -17,12 +17,11 @@
 package com.exorath.plugin.game.cakewars.players;
 
 import com.exorath.plugin.basegame.BaseGameAPI;
-import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.base.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
-import com.exorath.plugin.game.cakewars.team.CWTeam;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -32,6 +31,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -46,10 +46,7 @@ public class PlayerManager implements ListeningManager {
     private static final int RESPAWN_SECONDS = 8;
     private Map<Player, CWPlayer> players = new HashMap<>();
 
-    public PlayerManager() {
-        BaseGameAPI.getInstance().getTeamAPI().getPlayerJoinTeamObservable().subscribe(teamJoinEvent ->
-                getPlayer(TeamManager.getPlayer(teamJoinEvent.getPlayer())).setTeam((CWTeam) teamJoinEvent.getTeam()));
-    }
+    public PlayerManager() {}
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent event) {
@@ -69,6 +66,14 @@ public class PlayerManager implements ListeningManager {
         }
     }
 
+
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onChat(AsyncPlayerChatEvent event) {
+        CWPlayer cwPlayer = getPlayer(event.getPlayer());
+        if (cwPlayer != null && cwPlayer.getTeam() != null)
+            event.setFormat(cwPlayer.getTeam().getName() + " " + event.getFormat());
+    }
     public synchronized CWPlayer getPlayer(Player player) {
         CWPlayer cwPlayer = players.get(player);
         if (cwPlayer == null) {
@@ -118,7 +123,7 @@ public class PlayerManager implements ListeningManager {
         if (location.getY() < -60 && cwPlayer.getTeam() != null)
             location = cwPlayer.getTeam().getSpawnLocation();
         if (cwPlayer != null && cwPlayer.getState() == PlayerState.PLAYING)
-            event.getPlayer().sendMessage( ChatColor.RED + "You died." + ChatColor.GRAY + "Respawning in " + ChatColor.RED + RESPAWN_SECONDS + ChatColor.GRAY + " seconds.");
+            event.getPlayer().sendMessage( ChatColor.RED + "You died. " + ChatColor.GRAY + "Respawning in " + ChatColor.RED + RESPAWN_SECONDS + ChatColor.GRAY + " seconds.");
         event.setRespawnLocation(location);
     }
 }

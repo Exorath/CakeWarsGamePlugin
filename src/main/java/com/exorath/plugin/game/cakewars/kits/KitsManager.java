@@ -17,18 +17,13 @@
 package com.exorath.plugin.game.cakewars.kits;
 
 import com.exorath.commons.ItemStackSerialize;
-import com.exorath.exoteams.Team;
 import com.exorath.plugin.basegame.BaseGameAPI;
-import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.base.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
-import com.exorath.plugin.basegame.state.StateChangeEvent;
-import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.players.CWPlayer;
-import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import com.exorath.plugin.game.cakewars.players.PlayerState;
 import com.exorath.plugin.game.cakewars.players.PlayerStateChangeEvent;
-import com.exorath.plugin.game.cakewars.team.CWTeam;
 import com.exorath.service.kit.api.KitServiceAPI;
 import com.exorath.service.kit.res.Kit;
 import com.exorath.service.kit.res.KitPackage;
@@ -40,9 +35,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by toonsev on 5/22/2017.

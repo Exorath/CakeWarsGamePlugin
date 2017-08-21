@@ -21,10 +21,10 @@ import com.exorath.exoHUD.locations.row.HologramLocation;
 import com.exorath.exoHUD.removers.NeverRemover;
 import com.exorath.exoHUD.texts.ChatColorText;
 import com.exorath.exoHUD.texts.PlainText;
-import com.exorath.exoteams.Team;
 import com.exorath.exoteams.TeamAPI;
+import com.exorath.plugin.base.ExoBaseAPI;
 import com.exorath.plugin.basegame.BaseGameAPI;
-import com.exorath.plugin.basegame.manager.ListeningManager;
+import com.exorath.plugin.base.manager.ListeningManager;
 import com.exorath.plugin.basegame.state.State;
 import com.exorath.plugin.basegame.state.StateChangeEvent;
 import com.exorath.plugin.basegame.team.TeamManager;
@@ -109,7 +109,7 @@ public class CakeManager implements ListeningManager {
 
 
     private void handleCakeBreak(BlockBreakEvent event) {
-        CWPlayer cwPlayer = BaseGameAPI.getInstance().getManager(PlayerManager.class).getPlayer(event.getPlayer());
+        CWPlayer cwPlayer = ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(event.getPlayer());
         if (cwPlayer == null || cwPlayer.getTeam() == null) {
             System.out.println("Breaker does not have a team");
             event.setCancelled(true);
