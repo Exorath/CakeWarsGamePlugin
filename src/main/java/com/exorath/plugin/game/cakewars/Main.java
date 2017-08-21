@@ -65,7 +65,7 @@ public class Main extends JavaPlugin {
         } catch (FileNotFoundException e) {
             Main.terminate(e.getMessage());
         }
-        String flavor = baseGameAPI.getManager(FlavorManager.class).getFlavor();
+        String flavor = exoBaseAPI.getManager(FlavorManager.class).getFlavor();
         ConfigurationSection flavorSection = getConfig().getConfigurationSection("flavors." + flavor);
         FileConfiguration mapConfig = baseGameAPI.getMapsManager().getGameMap().getConfiguration();
         ConfigurationSection mapFlavorSection = mapConfig.getConfigurationSection("flavors." + flavor);
@@ -73,7 +73,7 @@ public class Main extends JavaPlugin {
         exoBaseAPI.registerManager(new CWTeamManager(baseGameAPI.getTeamAPI(), exoBaseAPI.getManager(PlayerManager.class), mapFlavorSection.getConfigurationSection("teams")));
         exoBaseAPI.registerManager(new SpawnersManager(mapFlavorSection.getConfigurationSection("spawners"), flavorSection.getConfigurationSection("spawnerTypes")));
         exoBaseAPI.registerManager(new StartTeleportManager(baseGameAPI.getTeamAPI()));
-        exoBaseAPI.registerManager(new ShopManager(baseGameAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
+        exoBaseAPI.registerManager(new ShopManager(exoBaseAPI.getManager(ClickableEntitiesManager.class), baseGameAPI.getTeamAPI().getTeams(), flavorSection.getConfigurationSection("shop")));//depends on spawner
         exoBaseAPI.registerManager(new KitsManager(new KitServiceAPI(getKitServiceAddress()), configProvider.getKitPackageJson()));
 
         exoBaseAPI.registerManager(new RewardManager(new CurrencyServiceAPI(getCurrencyServiceAddress())));
