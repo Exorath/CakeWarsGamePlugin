@@ -28,6 +28,8 @@ import com.exorath.plugin.game.cakewars.players.CWPlayer;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import com.exorath.plugin.game.cakewars.team.CWTeam;
 import com.exorath.plugin.game.cakewars.team.TeamPlayingChangeEvent;
+import com.exorath.service.connector.api.ConnectorServiceAPI;
+import com.exorath.service.connector.res.Filter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -105,6 +107,8 @@ public class FinishManager implements ListeningManager {
     @EventHandler
     public void onFinishEvent(GameFinishEvent event) {
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game finished.");
+        Bukkit.getOnlinePlayers().forEach((player) -> Bukkit.getServer().dispatchCommand(player, "/hub"));//TODO make this command more modular, for now this works
+
         Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
             Bukkit.broadcastMessage(ChatColor.RED + "Server terminating.");
             Main.terminate("Game finished successfully.");
