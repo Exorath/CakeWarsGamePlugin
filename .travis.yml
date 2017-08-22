@@ -12,4 +12,4 @@ deploy:
   skip_cleanup: true
   file_glob: true
   on:
-    tags: true
+    tags: false
