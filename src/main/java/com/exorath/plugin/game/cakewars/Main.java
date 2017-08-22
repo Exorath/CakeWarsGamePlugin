@@ -80,7 +80,7 @@ public class Main extends JavaPlugin {
         exoBaseAPI.registerManager(new GameProtectionManager(exoBaseAPI.getManager(PlayerManager.class)));
         exoBaseAPI.registerManager(new CakeManager(baseGameAPI.getTeamAPI()));
         exoBaseAPI.registerManager(new FinishManager());
-
+a
         if (mapFlavorSection.contains("minPlayers"))
             baseGameAPI.getTeamAPI().addStartRule(new GlobalMinPlayersStartRule(baseGameAPI.getTeamAPI(), mapFlavorSection.getInt("minPlayers")));
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);

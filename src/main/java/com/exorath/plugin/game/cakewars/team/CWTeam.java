@@ -23,6 +23,7 @@ import com.exorath.plugin.basegame.team.TeamManager;
 import com.exorath.plugin.game.cakewars.players.CWPlayer;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import com.exorath.plugin.game.cakewars.players.PlayerState;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -38,12 +39,27 @@ public class CWTeam extends Team {
     private Location cakeLocation;
     private Location primaryShopLocation;
 
+    org.bukkit.scoreboard.Team spigotTeam;
+
     public CWTeam(String name, Location spawnLocation, Location cakeLocation, Location primaryShopLocation, int maxPlayers) {
         this.name = name;
         this.spawnLocation = spawnLocation;
         this.cakeLocation = cakeLocation;
         this.primaryShopLocation = primaryShopLocation;
         setMaxPlayers(maxPlayers);
+        setupPrefix();
+    }
+
+    private void setupPrefix() {
+        spigotTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(name);
+        spigotTeam.setPrefix(ChatColor.BOLD + name + " ");
+        spigotTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.ALWAYS);
+        getOnPlayerJoinTeamObservable()
+                .map(teamPlayer -> ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer)).getPlayer())
+                .subscribe(player -> spigotTeam.addEntry(player.getName()));
+        getOnPlayerLeaveTeamObservable()
+                .map(teamPlayer -> ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer)).getPlayer())
+                .subscribe(player -> spigotTeam.removeEntry(player.getName()));
     }
 
     public synchronized void setPlaying(boolean playing) {
@@ -66,6 +82,7 @@ public class CWTeam extends Team {
         }
         return true;
     }
+
     public boolean shouldLose(Player player) {
         for (TeamPlayer teamPlayer : getPlayers()) {
             CWPlayer cwPlayer = ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer));
@@ -74,6 +91,7 @@ public class CWTeam extends Team {
         }
         return true;
     }
+
     public synchronized void setEggAlive(boolean eggAlive) {
         this.eggAlive = eggAlive;
     }
