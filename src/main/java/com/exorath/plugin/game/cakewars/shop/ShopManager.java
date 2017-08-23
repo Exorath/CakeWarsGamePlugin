@@ -31,6 +31,7 @@ import com.exorath.plugin.game.cakewars.Main;
 import com.exorath.plugin.game.cakewars.team.CWTeam;
 import io.reactivex.Observable;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Villager;
@@ -45,7 +46,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import java.util.*;
 
 /**
- * depends on spawnermanager
  * Created by toonsev on 3/18/2017.
  */
 public class ShopManager implements ListeningManager {
@@ -111,7 +111,10 @@ public class ShopManager implements ListeningManager {
         Observable<PlayerInteractAtEntityEvent> obs = clickableEntity.getInteractObservable();
         obs.subscribe(event -> {
             event.setCancelled(true);
-            this.shopMenu.getMenu().open(event.getPlayer());
+            event.getPlayer().sendMessage("Let's see what this delay does.");
+            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                this.shopMenu.getMenu().open(event.getPlayer());
+            }, 60l);
         });
     }
 

@@ -52,8 +52,8 @@ public class CWTeam extends Team {
 
     private void setupPrefix() {
         spigotTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(name);
-        spigotTeam.setPrefix(ChatColor.BOLD + name);
-        spigotTeam.setSuffix(ChatColor.RESET + " [x]");
+        spigotTeam.setPrefix(ChatColor.BOLD + name + " ");
+        spigotTeam.setSuffix(ChatColor.RESET + " [" + ChatColor.GREEN + "❤" + ChatColor.RESET + "]");
         spigotTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.ALWAYS);
         getOnPlayerJoinTeamObservable()
                 .map(teamPlayer -> ExoBaseAPI.getInstance().getManager(PlayerManager.class).getPlayer(TeamManager.getPlayer(teamPlayer)).getPlayer())
@@ -96,7 +96,7 @@ public class CWTeam extends Team {
     public synchronized void setEggAlive(boolean eggAlive) {
         this.eggAlive = eggAlive;
         if(!eggAlive){
-            spigotTeam.setSuffix(ChatColor.RESET + " [ ]");
+            spigotTeam.setSuffix(ChatColor.RESET + " [" + ChatColor.RED + "✘" +ChatColor.RESET + "]");
         }
     }
 
