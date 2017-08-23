@@ -109,7 +109,10 @@ public class ShopManager implements ListeningManager {
         entity.setProfession(Villager.Profession.LIBRARIAN);
         ClickableEntity clickableEntity = clickableEntitiesManager.getClickEntAPI().makeClickable(entity);
         Observable<PlayerInteractAtEntityEvent> obs = clickableEntity.getInteractObservable();
-        obs.subscribe(event -> this.shopMenu.getMenu().open(event.getPlayer()));
+        obs.subscribe(event -> {
+            event.setCancelled(true);
+            this.shopMenu.getMenu().open(event.getPlayer());
+        });
     }
 
     private Set<HologramLocation> locations = new HashSet<>();
