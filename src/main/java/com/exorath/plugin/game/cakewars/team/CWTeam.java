@@ -52,7 +52,7 @@ public class CWTeam extends Team {
 
     private void setupPrefix() {
         spigotTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(name);
-        spigotTeam.setPrefix(ChatColor.BOLD + name + " ");
+        spigotTeam.setPrefix(name + " ");
         spigotTeam.setSuffix(ChatColor.RESET + " [" + ChatColor.GREEN + "❤" + ChatColor.RESET + "]");
         spigotTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.ALWAYS);
         getOnPlayerJoinTeamObservable()
