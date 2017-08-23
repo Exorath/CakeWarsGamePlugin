@@ -65,7 +65,7 @@ public class ShopDirectory extends MenuItem {
             Main.terminate("Shop directory does not contain 'lore' field");
         List<String> lore = (ArrayList<String>) directorySection.getOrDefault("lore", new ArrayList<>());
 
-        List<BuyableItem> items =  ((ArrayList<Map<String, Object>>) directorySection.getOrDefault("items", new ArrayList<>()))
+        List<BuyableItem> items = ((ArrayList<Map<String, Object>>) directorySection.getOrDefault("items", new ArrayList<>()))
                 .stream().map(itemMap -> BuyableItem.getItem(itemMap))
                 .collect(Collectors.toList());
 
@@ -76,7 +76,10 @@ public class ShopDirectory extends MenuItem {
                 (Integer) directorySection.get("slot"),
                 items,
                 lore.toArray(new String[lore.size()]));
-        directory.getClickObservable().subscribe(event -> directory.getMenu().open((Player) event.getWhoClicked()));
+        directory.getClickObservable().subscribe(event -> {
+            event.setCancelled(true);
+            directory.getMenu().open((Player) event.getWhoClicked());
+        });
         return directory;
 
     }

@@ -53,7 +53,7 @@ public class BuyableItem extends MenuItem {
         this.costsPerSpawnerType = costsPerSpawnerType;
         this.name = name;
         this.material = material;
-        this.amount =amount;
+        this.amount = amount;
         this.lore = lore;
     }
 
@@ -93,7 +93,10 @@ public class BuyableItem extends MenuItem {
                 Material.valueOf((String) section.get("material")),
                 (Integer) section.get("amount"), costs,
                 (Integer) section.get("slot"));
-        item.getClickObservable().subscribe(event -> buy((Player) event.getWhoClicked(), item));
+        item.getClickObservable().subscribe(event -> {
+            event.setCancelled(true);
+            buy((Player) event.getWhoClicked(), item);
+        });
         return item;
     }
 
@@ -151,11 +154,11 @@ public class BuyableItem extends MenuItem {
         toRemove.forEach(slot -> player.getInventory().clear(slot));
     }
 
-    private ItemStack getActualItemStack(Player player){
+    private ItemStack getActualItemStack(Player player) {
         ItemStack is = new ItemStack(material, amount);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(name);
-        if(lore != null)
+        if (lore != null)
             im.setLore(Arrays.asList(lore));
         return is;
     }
