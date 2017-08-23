@@ -76,7 +76,11 @@ public class ShopDirectory extends MenuItem {
                 (Integer) directorySection.get("slot"),
                 items,
                 lore.toArray(new String[lore.size()]));
+
+        System.out.println("Arrived to subscribe");
+
         directory.getClickObservable().subscribe(event -> {
+            System.out.println("In clickable loop");
             event.setCancelled(true);
             directory.getMenu().open((Player) event.getWhoClicked());
         });

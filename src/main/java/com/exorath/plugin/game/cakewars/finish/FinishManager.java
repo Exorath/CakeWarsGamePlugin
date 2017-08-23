@@ -107,7 +107,7 @@ public class FinishManager implements ListeningManager {
     @EventHandler
     public void onFinishEvent(GameFinishEvent event) {
         Bukkit.broadcastMessage(ChatColor.GREEN + "Game finished.");
-        Bukkit.getOnlinePlayers().forEach((player) -> Bukkit.getServer().dispatchCommand(player, "hub"));//TODO make this command more modular, for now this works
+        Bukkit.getOnlinePlayers().forEach((player) -> player.chat("/hub"));//TODO make this command more modular, for now this works
 
         Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
             Bukkit.broadcastMessage(ChatColor.RED + "Server terminating.");

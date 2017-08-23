@@ -84,6 +84,7 @@
             <groupId>com.github.Exorath</groupId>
             <artifactId>ExoMenus</artifactId>
             <version>0.0.4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.Exorath</groupId>
