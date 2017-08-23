@@ -111,10 +111,11 @@ public class ShopManager implements ListeningManager {
         Observable<PlayerInteractAtEntityEvent> obs = clickableEntity.getInteractObservable();
         obs.subscribe(event -> {
             event.setCancelled(true);
-            event.getPlayer().sendMessage("Let's see what this delay does.");
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                this.shopMenu.getMenu().open(event.getPlayer());
-            }, 60l);
+            event.getPlayer().closeInventory();
+            this.shopMenu.getMenu().open(event.getPlayer());
+//            event.getPlayer().sendMessage("Let's see what this delay does.");
+//            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+//            }, 60l);
         });
     }
 
