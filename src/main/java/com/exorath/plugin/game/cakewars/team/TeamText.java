@@ -28,13 +28,15 @@ import java.util.List;
 /**
  * Created by toonsev on 8/24/2017.
  */
-public class TeamText implements HUDText{
+public class TeamText implements HUDText {
     private CWTeam cwTeam;
     private BehaviorSubject<List<TextComponent>> subject = BehaviorSubject.create();
 
     public TeamText(CWTeam cwTeam) {
         this.cwTeam = cwTeam;
         update();
+        cwTeam.getOnPlayerJoinTeamObservable().subscribe(player -> update());
+        cwTeam.getOnPlayerLeaveTeamObservable().subscribe(player -> update());
     }
 
     @Override
@@ -42,13 +44,16 @@ public class TeamText implements HUDText{
         return subject;
     }
 
-    protected void update(){
+    protected void update() {
         List<TextComponent> components = new ArrayList<>(1);
         TextComponent teamText = new TextComponent(cwTeam.getName());
         components.add(teamText);
-        if(cwTeam.isPlaying()){
-            if(cwTeam.isCakeAlive()){
-                TextComponent bracketOpen = new TextComponent( " [");
+        if (cwTeam.isPlaying()) {
+            TextComponent players = new TextComponent(" " + cwTeam.getPlayers().size());
+            players.setColor(ChatColor.WHITE);
+            players.setBold(true);
+            if (cwTeam.isCakeAlive()) {
+                TextComponent bracketOpen = new TextComponent(" [");
                 bracketOpen.setColor(ChatColor.WHITE);
                 TextComponent heart = new TextComponent("❤");
                 heart.setColor(ChatColor.GREEN);
@@ -57,8 +62,8 @@ public class TeamText implements HUDText{
                 components.add(bracketOpen);
                 components.add(heart);
                 components.add(bracketClosed);
-            }else {
-                TextComponent bracketOpen = new TextComponent( " [");
+            } else {
+                TextComponent bracketOpen = new TextComponent(" [");
                 bracketOpen.setColor(ChatColor.WHITE);
                 TextComponent cross = new TextComponent("✘");
                 cross.setColor(ChatColor.RED);
@@ -68,7 +73,7 @@ public class TeamText implements HUDText{
                 components.add(cross);
                 components.add(bracketClosed);
             }
-        }else {
+        } else {
             teamText.setText(ChatColor.stripColor(teamText.getText()));
             teamText.setColor(ChatColor.GRAY);
         }
