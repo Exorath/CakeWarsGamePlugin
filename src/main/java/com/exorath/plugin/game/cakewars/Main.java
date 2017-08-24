@@ -31,6 +31,7 @@ import com.exorath.plugin.game.cakewars.kits.KitsManager;
 import com.exorath.plugin.game.cakewars.players.PlayerManager;
 import com.exorath.plugin.game.cakewars.protection.GameProtectionManager;
 import com.exorath.plugin.game.cakewars.rewards.RewardManager;
+import com.exorath.plugin.game.cakewars.scoreboard.ScoreboardManager;
 import com.exorath.plugin.game.cakewars.shop.ShopManager;
 import com.exorath.plugin.game.cakewars.spawners.SpawnersManager;
 import com.exorath.plugin.game.cakewars.startTeleport.StartTeleportManager;
@@ -83,6 +84,7 @@ public class Main extends JavaPlugin {
         if (mapFlavorSection.contains("minPlayers"))
             baseGameAPI.getTeamAPI().addStartRule(new GlobalMinPlayersStartRule(baseGameAPI.getTeamAPI(), mapFlavorSection.getInt("minPlayers")));
         baseGameAPI.getStateManager().setState(State.WAITING_FOR_PLAYERS);
+        exoBaseAPI.registerManager(new ScoreboardManager());
     }
 
     public static Main getInstance() {

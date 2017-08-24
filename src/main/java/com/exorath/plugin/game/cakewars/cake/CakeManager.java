@@ -75,7 +75,7 @@ public class CakeManager implements ListeningManager {
                 block.setMetadata("cake", new FixedMetadataValue(Main.getInstance(), true));
                 hologramsByTeam.put(team, new HologramLocation(block.getLocation().clone().add(0.5d, 1.5d, 0.5d)));
                 hologramsByTeam.get(team).addText(new PlainText(team.getName() + "'s"), DisplayProperties.create(0, NeverRemover.never()));
-                hologramsByTeam.get(team).addText(ChatColorText.markup(new PlainText("Egg")).color(ChatColor.GRAY), DisplayProperties.create(-1, NeverRemover.never()));
+                hologramsByTeam.get(team).addText(ChatColorText.markup(new PlainText("Cake")).color(ChatColor.GRAY), DisplayProperties.create(-1, NeverRemover.never()));
             });
         }
     }
@@ -116,8 +116,8 @@ public class CakeManager implements ListeningManager {
             return;
         }
         CWTeam blockTeam = teamByCake.get(event.getBlock());
-        if (blockTeam != null && !blockTeam.equals(cwPlayer.getTeam()) && blockTeam.isEggAlive()) {
-            blockTeam.setEggAlive(false);
+        if (blockTeam != null && !blockTeam.equals(cwPlayer.getTeam()) && blockTeam.isCakeAlive()) {
+            blockTeam.setCakeAlive(false);
             Bukkit.getPluginManager().callEvent(new CakeBreakEvent(cwPlayer, cwPlayer.getTeam(), event.getBlock()));
             Bukkit.broadcastMessage(ChatColor.GREEN + "Team " + blockTeam.getName() + ChatColor.GREEN + " egg has been destroyed.");
             blockTeam.getPlayers().forEach(teamPlayer -> TeamManager.getPlayer(teamPlayer).sendMessage(ChatColor.RED + "Your egg has been destroyed, you will no longer respawn."));

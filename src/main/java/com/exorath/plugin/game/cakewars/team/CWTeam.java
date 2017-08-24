@@ -32,14 +32,15 @@ import org.bukkit.entity.Player;
  * Created by toonsev on 3/15/2017.
  */
 public class CWTeam extends Team {
-    private boolean eggAlive = true;
+    private boolean cakeAlive = true;
     private boolean playing = false;
     private String name;
     private Location spawnLocation;
     private Location cakeLocation;
     private Location primaryShopLocation;
 
-    org.bukkit.scoreboard.Team spigotTeam;
+    private org.bukkit.scoreboard.Team spigotTeam;
+    private TeamText teamText;
 
     public CWTeam(String name, Location spawnLocation, Location cakeLocation, Location primaryShopLocation, int maxPlayers) {
         this.name = name;
@@ -48,6 +49,7 @@ public class CWTeam extends Team {
         this.primaryShopLocation = primaryShopLocation;
         setMaxPlayers(maxPlayers);
         setupPrefix();
+        this.teamText = new TeamText(this);
     }
 
     private void setupPrefix() {
@@ -68,6 +70,8 @@ public class CWTeam extends Team {
             return;
         System.out.println(this + " is now playing.");
         this.playing = playing;
+        teamText.update();
+
         Bukkit.getPluginManager().callEvent(new TeamPlayingChangeEvent(this, playing));
     }
 
@@ -93,15 +97,20 @@ public class CWTeam extends Team {
         return true;
     }
 
-    public synchronized void setEggAlive(boolean eggAlive) {
-        this.eggAlive = eggAlive;
-        if(!eggAlive){
-            spigotTeam.setSuffix(ChatColor.RESET + " [" + ChatColor.RED + "✘" +ChatColor.RESET + "]");
-        }
+    public synchronized void setCakeAlive(boolean cakeAlive) {
+        this.cakeAlive = cakeAlive;
+        if (!cakeAlive)
+            spigotTeam.setSuffix(ChatColor.RESET + " [" + ChatColor.RED + "✘" + ChatColor.RESET + "]");
+        teamText.update();
     }
 
-    public synchronized boolean isEggAlive() {
-        return eggAlive;
+
+    public synchronized boolean isCakeAlive() {
+        return cakeAlive;
+    }
+
+    public TeamText getTeamText() {
+        return teamText;
     }
 
     public String getName() {
@@ -119,4 +128,6 @@ public class CWTeam extends Team {
     public Location getSpawnLocation() {
         return spawnLocation;
     }
+
+
 }
